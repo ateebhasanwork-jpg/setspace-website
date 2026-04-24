@@ -1,0 +1,34 @@
+packages:
+  "framer-motion": "For cinematic scroll animations, micro-interactions, and page transitions"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to resolve conflicting Tailwind classes"
+
+images:
+  - path: "artifacts/setspace/public/images/hero-bg.png"
+    description: "Cinematic dark abstract background, subtle volumetric lighting, dark gray and black tones, moody film grain texture"
+    aspect_ratio: "16:9"
+  - path: "artifacts/setspace/public/images/port-1.png"
+    description: "High contrast black and white still from a professional YouTube talking head video, editorial lighting"
+    aspect_ratio: "16:9"
+  - path: "artifacts/setspace/public/images/port-2.png"
+    description: "Dynamic motion graphics abstract frame, dark theme with bright white text placeholder elements, cinematic"
+    aspect_ratio: "9:16"
+  - path: "artifacts/setspace/public/images/port-3.png"
+    description: "Professional product commercial still, moody dark lighting, high end cinematography"
+    aspect_ratio: "16:9"
+  - path: "artifacts/setspace/public/images/port-4.png"
+    description: "Instagram reel style video frame placeholder, dark aesthetic, fast paced editing vibe"
+    aspect_ratio: "9:16"
+  - path: "artifacts/setspace/public/images/team-1.png"
+    description: "Black and white editorial portrait of a creative director, dark background, cinematic lighting"
+    aspect_ratio: "1:1"
+  - path: "artifacts/setspace/public/images/team-2.png"
+    description: "Black and white editorial portrait of a video editor, dark background, rim light"
+    aspect_ratio: "1:1"
+  - path: "artifacts/setspace/public/images/team-3.png"
+    description: "Black and white editorial portrait of a motion designer, dark background, moody"
+    aspect_ratio: "1:1"
+
+notes:
+  - This is a frontend-only static site.
+  - All interactive forms (like Contact) will simulate submission with a timeout and success toast.
