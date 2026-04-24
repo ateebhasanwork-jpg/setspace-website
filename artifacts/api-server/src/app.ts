@@ -83,6 +83,31 @@ if (process.env.NODE_ENV === "production") {
 
       const fileExt = path.extname(filePath).toLowerCase();
       const mimeType = MIME[fileExt] ?? "application/octet-stream";
+
+      // Stream video files with range request support
+      if (fileExt === ".mp4" || fileExt === ".webm" || fileExt === ".mov") {
+        const stat = fs.statSync(filePath);
+        const fileSize = stat.size;
+        const rangeHeader = req.headers.range;
+        res.setHeader("Content-Type", mimeType);
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        if (rangeHeader) {
+          const parts = rangeHeader.replace(/bytes=/, "").split("-");
+          const start = parseInt(parts[0], 10);
+          const end = parts[1] ? parseInt(parts[1], 10) : Math.min(start + 2 * 1024 * 1024, fileSize - 1);
+          const chunkSize = end - start + 1;
+          res.setHeader("Content-Range", `bytes ${start}-${end}/${fileSize}`);
+          res.setHeader("Content-Length", chunkSize);
+          res.status(206);
+          fs.createReadStream(filePath, { start, end }).pipe(res);
+        } else {
+          res.setHeader("Content-Length", fileSize);
+          fs.createReadStream(filePath).pipe(res);
+        }
+        return;
+      }
+
       const { raw, gzip, etag } = getEntry(filePath, isImmutable);
 
       res.setHeader("Content-Type", mimeType);
