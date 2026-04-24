@@ -742,6 +742,8 @@ export default function Home() {
                   <img
                     src={`${import.meta.env.BASE_URL}images/${member.img}?v=2`}
                     alt={member.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-700 brightness-90"
                     style={{ objectPosition: member.objPos }}
                   />
