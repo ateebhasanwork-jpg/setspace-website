@@ -206,8 +206,8 @@ export default function Home() {
             transition={{ duration: 0.9, delay: 0.15 }}
           >
             The content engine for<br />
-            <span className="text-gradient">finance experts</span><br />
-            building authority on YouTube.
+            <span className="text-gradient">finance creators</span><br />
+            on YouTube.
           </motion.h1>
 
           <motion.p
@@ -216,7 +216,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.3 }}
           >
-            You film 2–4 hours a month. We turn it into a polished YouTube channel, plus shorts and LinkedIn-ready clips. Done-for-you, end to end.
+            You film. We do the rest.
           </motion.p>
 
           <motion.div
@@ -246,7 +246,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.6 }}
           >
-            Trusted by finance creators and founders. Top Rated Plus on Upwork. ~$70K delivered.
+            Trusted by finance creators and founders. Top Rated Plus on Upwork. ~$100K delivered.
           </motion.p>
 
           <motion.div
@@ -742,7 +742,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             <motion.div {...fadeIn}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-border text-foreground/50 text-xs font-semibold uppercase tracking-wider mb-6">
-                Finance Creator — UK
+                Finance Creator — Germany
               </div>
               <h4 className="text-2xl font-display font-bold mb-4">Philip — Finance Coach & Educator</h4>
               <p className="text-foreground/60 leading-relaxed mb-6">
@@ -781,7 +781,7 @@ export default function Home() {
                   <div className="w-9 h-9 rounded-full bg-foreground/10 border border-border flex items-center justify-center text-xs font-bold text-foreground/50">PH</div>
                   <div>
                     <div className="font-semibold text-sm">Philip H.</div>
-                    <div className="text-xs text-foreground/40">Finance Coach & Educator, UK</div>
+                    <div className="text-xs text-foreground/40">Finance Coach & Educator, Germany</div>
                   </div>
                 </div>
               </div>
