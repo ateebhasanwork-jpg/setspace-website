@@ -94,29 +94,32 @@ export default function Home() {
   const { t } = useLang();
 
   useEffect(() => {
-    const SPEED = 0.4;
+    const SPEED = 0.6;
     const el = teamScrollRef.current;
     if (!el) return;
-    let intensity = 0;
-    const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const zone = rect.width * 0.18;
-      cancelAnimationFrame(teamScrollRaf.current);
-      if (x < zone) {
-        intensity = 1 - x / zone;
-        const scroll = () => { el.scrollLeft -= SPEED * intensity; teamScrollRaf.current = requestAnimationFrame(scroll); };
-        teamScrollRaf.current = requestAnimationFrame(scroll);
-      } else if (x > rect.width - zone) {
-        intensity = 1 - (rect.width - x) / zone;
-        const scroll = () => { el.scrollLeft += SPEED * intensity; teamScrollRaf.current = requestAnimationFrame(scroll); };
-        teamScrollRaf.current = requestAnimationFrame(scroll);
+    let paused = false;
+
+    const autoScroll = () => {
+      if (!paused) {
+        el.scrollLeft += SPEED;
+        // Loop back to start when reaching end
+        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) {
+          el.scrollLeft = 0;
+        }
       }
+      teamScrollRaf.current = requestAnimationFrame(autoScroll);
     };
-    const onLeave = () => cancelAnimationFrame(teamScrollRaf.current);
-    el.addEventListener("mousemove", onMove);
+    teamScrollRaf.current = requestAnimationFrame(autoScroll);
+
+    const onEnter = () => { paused = true; };
+    const onLeave = () => { paused = false; };
+    el.addEventListener("mouseenter", onEnter);
     el.addEventListener("mouseleave", onLeave);
-    return () => { el.removeEventListener("mousemove", onMove); el.removeEventListener("mouseleave", onLeave); cancelAnimationFrame(teamScrollRaf.current); };
+    return () => {
+      cancelAnimationFrame(teamScrollRaf.current);
+      el.removeEventListener("mouseenter", onEnter);
+      el.removeEventListener("mouseleave", onLeave);
+    };
   }, []);
 
   const portfolioItems = [
@@ -854,7 +857,7 @@ export default function Home() {
                 I work closely with every client from brief to final file. No hand-offs to junior editors on your account. You get direct communication, fast turnarounds, and edits built around your audience's retention.
               </p>
               <p className="text-foreground/50 leading-relaxed">
-                Top Rated Plus on Upwork. ~$70K delivered. 4.9★ across 100+ projects.
+                Top Rated Plus on Upwork. ~$100K delivered. 4.9★ across 100+ projects.
               </p>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 {[
@@ -1025,7 +1028,7 @@ export default function Home() {
             <p className="text-xl text-foreground/45 mb-4 max-w-xl mx-auto leading-relaxed">
               Book a free 20-minute strategy call. We'll map out a publishing plan for your channel — no pressure, no pitch deck.
             </p>
-            <p className="text-foreground/30 text-sm mb-10">Trusted by finance creators and founders. Top Rated Plus on Upwork. ~$70K delivered.</p>
+            <p className="text-foreground/30 text-sm mb-10">Trusted by finance creators and founders. Top Rated Plus on Upwork. ~$100K delivered.</p>
             <a
               href={CALENDLY}
               target="_blank"
