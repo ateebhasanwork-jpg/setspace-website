@@ -268,7 +268,7 @@ export default function Home() {
               <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Average Rating</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-display font-bold">~$70K</div>
+              <div className="text-3xl font-display font-bold">~$100K</div>
               <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Delivered on Upwork</div>
             </div>
           </motion.div>
