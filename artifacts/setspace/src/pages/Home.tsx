@@ -385,10 +385,10 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.12 }}
-                className="relative"
+                className="relative flex flex-col items-center text-center"
               >
                 {i < 2 && (
-                  <div className="hidden md:block absolute top-5 start-[4.5rem] end-0 h-px bg-gradient-to-r from-border to-transparent" />
+                  <div className="hidden md:block absolute top-5 start-[calc(50%+2.5rem)] end-[-50%] h-px bg-gradient-to-r from-border to-transparent" />
                 )}
                 <div className="w-10 h-10 rounded-full bg-foreground/[0.07] border border-border flex items-center justify-center text-foreground/50 mb-5 relative z-10">
                   {step.icon}
