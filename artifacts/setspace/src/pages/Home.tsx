@@ -13,10 +13,10 @@ const GRAY    = "#777777";
 const GRAY2   = "#888888";
 const DIVIDER = "#E8E8E8";
 const DIVIDER2 = "#2A2A2A";
+const GHOST   = "#F0EDE8";
 const CALENDLY = "https://calendly.com/ateebhasan-work/new-meeting";
 
 const SEC_PAD = "140px 24px";
-const SEC_PAD_M = "80px 24px";
 const MAX_W = "1140px";
 
 function useInView(threshold = 0.15) {
@@ -88,6 +88,18 @@ const teamMembers = [
   { name: "Abdullah Khan",   role: "Motion Graphics Specialist",  img: "abdullah.jpeg" },
 ];
 
+const CYCLE_STATEMENTS = [
+  "We handle the content.",
+  "You handle the clients.",
+  "That's the deal.",
+];
+
+const HERO_VIDEOS = [
+  "W4Y0a2cz28E",
+  "Ssi2F5K2yaE",
+  "w2U15wziQcw",
+];
+
 function Label({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "11px", textTransform: "uppercase", letterSpacing: "3px", color: ORANGE, marginBottom: "24px" }}>
@@ -104,11 +116,26 @@ function SectionHeadline({ children, style }: { children: React.ReactNode; style
   );
 }
 
+const TICKER_ITEMS = ["Real Clients", "Real Results", "Video Editing", "Reels", "Landing Pages", "Email Sequences", "Content Strategy", "Done For You", "Wellness Marketing"];
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState("All");
   const [hovered, setHovered] = useState<typeof portfolioItems[0] | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [cycleIdx, setCycleIdx] = useState(0);
+  const [cycleVisible, setCycleVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCycleVisible(false);
+      setTimeout(() => {
+        setCycleIdx(i => (i + 1) % CYCLE_STATEMENTS.length);
+        setCycleVisible(true);
+      }, 400);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filtered = activeTab === "All" ? portfolioItems : portfolioItems.filter(p => p.category === activeTab);
 
@@ -118,7 +145,6 @@ export default function Home() {
 
       {/* ───────── HERO ───────── */}
       <section style={{ background: WHITE, paddingTop: "140px" }}>
-        {/* 2-col: text left, mockups right */}
         <div style={{ maxWidth: MAX_W, margin: "0 auto", padding: "40px 24px 80px" }}>
           <div className="hero-grid">
 
@@ -136,9 +162,24 @@ export default function Home() {
                 ))}
               </h1>
 
-              <p className="hero-sub-text" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, maxWidth: "480px", margin: "0 0 48px", lineHeight: 1.7 }}>
+              <p className="hero-sub-text" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, maxWidth: "480px", margin: "0 0 28px", lineHeight: 1.7 }}>
                 Done-for-you content and marketing for therapists, counselors, and wellness professionals.
               </p>
+
+              {/* Inner marquee — below sub, above CTA */}
+              <div style={{ overflow: "hidden", background: BLACK, marginBottom: "32px" }}>
+                <div className="hero-inner-ticker">
+                  {[0, 1].map(rep => (
+                    <span key={rep} style={{ display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
+                      {TICKER_ITEMS.map((item, i) => (
+                        <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "12px", textTransform: "uppercase", letterSpacing: "3px", color: "#F5F0EB", padding: "14px 28px", display: "inline-block" }}>
+                          {item}<span style={{ marginLeft: "28px", color: ORANGE }}>·</span>
+                        </span>
+                      ))}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
               <div className="hero-cta-row" style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
                 <a
@@ -158,35 +199,44 @@ export default function Home() {
               </p>
             </div>
 
-            {/* RIGHT — floating mockups (desktop only via CSS) */}
+            {/* RIGHT — real YouTube Shorts iframes (desktop only) */}
             <div className="hero-mockups" aria-hidden="true">
-              <div style={{ position: "relative", height: "480px", width: "100%" }}>
-                {/* Frame A — back-left */}
+              <div style={{ position: "relative", height: "500px", width: "100%" }}>
+                {/* Frame A — back-left, -4deg */}
                 <div
                   className="mockup-float-a"
-                  style={{ position: "absolute", top: "30px", left: "0px", width: "180px", height: "310px", border: `1px solid ${DIVIDER}`, background: ORANGE, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1 }}
+                  style={{ position: "absolute", top: "20px", left: "10px", width: "200px", height: "355px", border: `2px solid ${BLACK}`, overflow: "hidden", zIndex: 1 }}
                 >
-                  <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Play style={{ width: "16px", height: "16px", color: WHITE, marginLeft: "3px" }} fill={WHITE} />
-                  </div>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${HERO_VIDEOS[0]}?controls=0&mute=1&loop=1&playlist=${HERO_VIDEOS[0]}&modestbranding=1`}
+                    title="Client reel 1"
+                    allow="autoplay; encrypted-media"
+                    style={{ width: "100%", height: "100%", border: "none", pointerEvents: "none" }}
+                  />
                 </div>
-                {/* Frame B — center */}
+                {/* Frame B — center, 0deg */}
                 <div
                   className="mockup-float-b"
-                  style={{ position: "absolute", top: "80px", left: "100px", width: "190px", height: "330px", border: `1px solid ${DIVIDER}`, background: "#1A1A1A", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}
+                  style={{ position: "absolute", top: "60px", left: "110px", width: "200px", height: "355px", border: `2px solid ${BLACK}`, overflow: "hidden", zIndex: 2 }}
                 >
-                  <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "rgba(232,75,26,0.3)", border: "1px solid rgba(232,75,26,0.6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Play style={{ width: "16px", height: "16px", color: ORANGE, marginLeft: "3px" }} fill={ORANGE} />
-                  </div>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${HERO_VIDEOS[1]}?controls=0&mute=1&loop=1&playlist=${HERO_VIDEOS[1]}&modestbranding=1`}
+                    title="Client reel 2"
+                    allow="autoplay; encrypted-media"
+                    style={{ width: "100%", height: "100%", border: "none", pointerEvents: "none" }}
+                  />
                 </div>
-                {/* Frame C — front-right */}
+                {/* Frame C — front-right, 4deg */}
                 <div
                   className="mockup-float-c"
-                  style={{ position: "absolute", top: "140px", left: "200px", width: "175px", height: "300px", border: `1px solid ${DIVIDER}`, background: ORANGE, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 3 }}
+                  style={{ position: "absolute", top: "110px", left: "210px", width: "200px", height: "355px", border: `2px solid ${BLACK}`, overflow: "hidden", zIndex: 3 }}
                 >
-                  <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Play style={{ width: "16px", height: "16px", color: WHITE, marginLeft: "3px" }} fill={WHITE} />
-                  </div>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${HERO_VIDEOS[2]}?controls=0&mute=1&loop=1&playlist=${HERO_VIDEOS[2]}&modestbranding=1`}
+                    title="Client reel 3"
+                    allow="autoplay; encrypted-media"
+                    style={{ width: "100%", height: "100%", border: "none", pointerEvents: "none" }}
+                  />
                 </div>
               </div>
             </div>
@@ -196,25 +246,23 @@ export default function Home() {
 
         {/* STATS BAR */}
         <div style={{ background: WHITE, borderTop: `1px solid ${DIVIDER}`, borderBottom: `1px solid ${DIVIDER}`, padding: "16px 24px" }}>
-          <div style={{ maxWidth: MAX_W, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: "40px", flexWrap: "wrap" }}>
+          <div style={{ maxWidth: MAX_W, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: "0", flexWrap: "wrap" }}>
             {["160+ Clients", "1,000+ Content Pieces", "3 Years In Production"].map((s, i) => (
-              <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY }}>
-                {i > 0 && <span style={{ marginRight: "40px", color: DIVIDER }}>·</span>}
+              <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY, padding: "0 32px", borderRight: i < 2 ? `1px solid ${DIVIDER}` : "none" }}>
                 {s}
               </span>
             ))}
           </div>
         </div>
 
-        {/* MARQUEE TICKER */}
+        {/* DARK TICKER */}
         <div style={{ background: BLACK, padding: "16px 0", overflow: "hidden" }}>
           <div className="ticker-track">
             {[0, 1].map(rep => (
-              <span key={rep} style={{ display: "flex", alignItems: "center", gap: "0", whiteSpace: "nowrap" }}>
+              <span key={rep} style={{ display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
                 {["Video Editing", "Instagram Reels", "Content Strategy", "Landing Pages", "Email Sequences", "Short-Form Content", "Wellness Marketing", "Done For You"].map((item, i) => (
-                  <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "13px", textTransform: "uppercase", letterSpacing: "2px", color: "#F5F0EB", padding: "0 32px" }}>
-                    {item}
-                    <span style={{ marginLeft: "32px", color: ORANGE }}>·</span>
+                  <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "13px", textTransform: "uppercase", letterSpacing: "2px", color: "#F5F0EB", padding: "0 32px", display: "inline-block" }}>
+                    {item}<span style={{ marginLeft: "32px", color: ORANGE }}>·</span>
                   </span>
                 ))}
               </span>
@@ -222,6 +270,21 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── GHOST TEXT MARQUEE — between Hero and Stats ── */}
+      <div style={{ background: WHITE, overflow: "hidden", padding: "20px 0", borderBottom: `1px solid ${DIVIDER}` }}>
+        <div className="ghost-ticker">
+          {[0, 1].map(rep => (
+            <span key={rep} style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
+              {["SetSpace", "Content Production", "Marketing Engine", "Wellness Professionals", "Done For You"].map((item, i) => (
+                <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "64px", color: GHOST, padding: "0 40px", lineHeight: 1, display: "inline-block" }}>
+                  {item} ·
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ───────── STATS ───────── */}
       <section style={{ background: DARK, padding: "80px 24px" }}>
@@ -252,7 +315,22 @@ export default function Home() {
           <Label>What We Do</Label>
           <SectionHeadline style={{ maxWidth: "600px" }}>Everything you need to grow online</SectionHeadline>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0", marginTop: "64px" }}>
+          {/* Rotating editorial statement */}
+          <div style={{ marginBottom: "48px", minHeight: "36px" }}>
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontWeight: 700,
+              fontSize: "24px",
+              color: ORANGE,
+              margin: 0,
+              opacity: cycleVisible ? 1 : 0,
+              transition: "opacity 0.4s ease",
+            }}>
+              {CYCLE_STATEMENTS[cycleIdx]}
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0" }}>
             {[
               { num: "01", title: "Content Production", desc: "Video editing, reels, and short-form content delivered every month — consistently and on-brand." },
               { num: "02", title: "Landing Pages", desc: "High-converting pages designed and built for your practice to capture leads and book sessions." },
@@ -284,24 +362,31 @@ export default function Home() {
           <Label>Who We Help</Label>
           <SectionHeadline>Built for wellness professionals</SectionHeadline>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0", marginTop: "64px" }}>
-            {[
-              { title: "Therapists & Counselors", desc: "Build trust online, attract ideal clients, and stay consistent without adding hours to your week." },
-              { title: "Wellness Coaches", desc: "Turn your expertise into compelling content that grows your audience and fills your calendar." },
-              { title: "Mental Health Practitioners", desc: "Grow your practice with content that reflects the care and quality you bring to every session." },
-            ].map((col, i) => (
-              <div
-                key={i}
-                style={{ borderLeft: i > 0 ? `1px solid ${DIVIDER}` : "none", paddingLeft: i > 0 ? "48px" : "0", paddingRight: "48px" }}
-              >
-                <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: BLACK, marginBottom: "16px" }}>
-                  {col.title}
-                </h3>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
-                  {col.desc}
-                </p>
-              </div>
-            ))}
+          {/* Columns with ghost watermark */}
+          <div style={{ position: "relative", marginTop: "64px" }}>
+            {/* Watermark */}
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "clamp(80px, 14vw, 200px)", color: GHOST, whiteSpace: "nowrap", pointerEvents: "none", userSelect: "none", zIndex: 0, lineHeight: 1 }}>
+              WELLNESS
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0", position: "relative", zIndex: 1 }}>
+              {[
+                { title: "Therapists & Counselors", desc: "Build trust online, attract ideal clients, and stay consistent without adding hours to your week." },
+                { title: "Wellness Coaches", desc: "Turn your expertise into compelling content that grows your audience and fills your calendar." },
+                { title: "Mental Health Practitioners", desc: "Grow your practice with content that reflects the care and quality you bring to every session." },
+              ].map((col, i) => (
+                <div
+                  key={i}
+                  style={{ borderLeft: i > 0 ? `1px solid ${DIVIDER}` : "none", paddingLeft: i > 0 ? "48px" : "0", paddingRight: "48px" }}
+                >
+                  <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: BLACK, marginBottom: "16px" }}>
+                    {col.title}
+                  </h3>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
+                    {col.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -451,13 +536,18 @@ export default function Home() {
       {/* ───────── PACKAGES ───────── */}
       <section id="pricing" style={{ background: WARM, padding: SEC_PAD }}>
         <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "72px" }}>
+          <div style={{ textAlign: "center", marginBottom: "40px" }}>
             <Label>Pricing</Label>
             <SectionHeadline>Simple, transparent packages</SectionHeadline>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, margin: 0 }}>
               No hidden fees. No long-term lock-ins.
             </p>
           </div>
+
+          {/* Bold statement */}
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "clamp(20px, 2.5vw, 32px)", color: BLACK, maxWidth: "700px", margin: "0 0 48px", lineHeight: 1.3 }}>
+            No retainer traps. No agency fluff. Just content that works.
+          </p>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "24px", alignItems: "start" }}>
             {[
@@ -523,7 +613,7 @@ export default function Home() {
                     fontWeight: 600,
                     fontSize: "14px",
                     background: plan.dark ? WHITE : "transparent",
-                    color: plan.dark ? BLACK : BLACK,
+                    color: BLACK,
                     border: `1px solid ${plan.dark ? WHITE : BLACK}`,
                     padding: "14px 0",
                     textDecoration: "none",
@@ -560,8 +650,8 @@ export default function Home() {
                 {[
                   { value: "160+", label: "Clients Helped" },
                   { value: "1,000+", label: "Content Pieces" },
+                  { value: "3 Years", label: "In Production" },
                   { value: "4.9★", label: "Average Rating" },
-                  { value: "48h", label: "Avg. Turnaround" },
                 ].map((s, i) => (
                   <div key={i} style={{ background: WARM, padding: "24px" }}>
                     <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "28px", color: BLACK, lineHeight: 1 }}>{s.value}</div>
@@ -572,7 +662,8 @@ export default function Home() {
             </div>
 
             <div>
-              <div style={{ position: "relative", marginBottom: "2px" }}>
+              {/* Ateeb — full width, prominent */}
+              <div style={{ position: "relative", marginBottom: "8px" }}>
                 <img
                   src={`${import.meta.env.BASE_URL}images/ateeb.jpg`}
                   alt="Ateeb Hasan — Founder"
@@ -583,13 +674,15 @@ export default function Home() {
                   <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY2, marginTop: "4px" }}>Founder & Creative Lead</div>
                 </div>
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "2px" }}>
-                {teamMembers.slice(0, 6).map(m => (
-                  <div key={m.name} style={{ flex: "1 1 calc(33.33% - 2px)", minWidth: "60px", position: "relative", aspectRatio: "1", overflow: "hidden" }}>
+
+              {/* Team grid — 3 cols, 300×300 squares */}
+              <div className="team-grid">
+                {teamMembers.map(m => (
+                  <div key={m.name} style={{ width: "100%", aspectRatio: "1", overflow: "hidden", border: `1px solid ${DIVIDER}` }}>
                     <img
                       src={`${import.meta.env.BASE_URL}images/${m.img}`}
                       alt={m.name}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 10%" }}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 10%", display: "block" }}
                     />
                   </div>
                 ))}
@@ -637,6 +730,11 @@ export default function Home() {
       {/* ───────── CTA ───────── */}
       <section style={{ background: WHITE, borderTop: `1px solid ${DIVIDER}`, padding: SEC_PAD, textAlign: "center" }}>
         <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          {/* Social proof line */}
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: GRAY, textTransform: "uppercase", letterSpacing: "2px", marginBottom: "32px" }}>
+            Trusted by 160+ therapists, counselors, and wellness coaches worldwide.
+          </p>
+
           <h2 style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: "clamp(36px, 6vw, 72px)", color: BLACK, lineHeight: 1.08, margin: "0 auto 20px", maxWidth: "800px" }}>
             Ready to build your marketing engine?
           </h2>
