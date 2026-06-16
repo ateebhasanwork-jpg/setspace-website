@@ -208,9 +208,9 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.15 }}
           >
-            The content engine for<br />
-            <span className="text-gradient">finance creators</span><br />
-            on YouTube.
+            We produce your content.<br />
+            <span className="text-gradient">You serve</span><br />
+            your clients.
           </motion.h1>
 
           <motion.p
@@ -219,7 +219,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.3 }}
           >
-            You film. We do the rest.
+            Video editing, reels, and design for coaches and service providers — delivered consistently every month, no hand-holding required.
           </motion.p>
 
           <motion.div
@@ -249,7 +249,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.6 }}
           >
-            Trusted by finance creators and founders. Top Rated Plus on Upwork. ~$100K delivered.
+            Trusted by coaches, consultants, and founders. Top Rated Plus on Upwork. ~$100K delivered.
           </motion.p>
 
           <motion.div
@@ -281,7 +281,7 @@ export default function Home() {
       {/* ── MARQUEE ── */}
       <div className="py-5 border-y border-border overflow-hidden bg-card/50">
         <div className="marquee-track">
-          {[...["YouTube Long-Form", "Shorts & Reels", "LinkedIn Clips", "Talking Head Editing", "Finance Content", "Thumbnails", "Channel Strategy", "Podcast Clips", "Done-For-You"], ...["YouTube Long-Form", "Shorts & Reels", "LinkedIn Clips", "Talking Head Editing", "Finance Content", "Thumbnails", "Channel Strategy", "Podcast Clips", "Done-For-You"]].map((item, i) => (
+          {[...["Video Editing", "Reels & Shorts", "LinkedIn Clips", "Talking Head Editing", "Graphic Design", "Thumbnails", "Content Strategy", "Podcast Clips", "Done-For-You"], ...["Video Editing", "Reels & Shorts", "LinkedIn Clips", "Talking Head Editing", "Graphic Design", "Thumbnails", "Content Strategy", "Podcast Clips", "Done-For-You"]].map((item, i) => (
             <span key={i} className="flex items-center gap-3 px-6 text-sm font-medium text-foreground/40 uppercase tracking-widest whitespace-nowrap">
               {item}
               <span className="w-1 h-1 rounded-full bg-foreground/20 inline-block" />
@@ -374,12 +374,12 @@ export default function Home() {
               {
                 icon: <Scissors className="w-5 h-5" />,
                 title: "We produce.",
-                desc: "Long-form YouTube edits, plus 5–8 shorts per video, thumbnails, and LinkedIn-ready clips — fully edited and ready to publish.",
+                desc: "Long-form video edits, plus reels and clips, thumbnails, and LinkedIn-ready content — fully edited and ready to publish.",
               },
               {
                 icon: <TrendingUp className="w-5 h-5" />,
-                title: "You publish, grow, repeat.",
-                desc: "Post on YouTube, Shorts, Reels, and LinkedIn. Build authority consistently without editing eating your calendar.",
+                title: "You show up, consistently.",
+                desc: "Post across YouTube, Instagram, LinkedIn, and TikTok. Stay consistent online without content production eating your week.",
               },
             ].map((step, i) => (
               <motion.div
@@ -412,7 +412,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <motion.div {...fadeIn} className="mb-16">
             <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">What We Do</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold max-w-xl">Everything your channel needs.</h3>
+            <h3 className="text-4xl md:text-5xl font-display font-bold max-w-xl">Everything your brand needs.</h3>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -420,7 +420,7 @@ export default function Home() {
               {
                 icon: <Youtube className="w-7 h-7 mb-5 text-foreground/70" />,
                 title: "YouTube Long-Form Editing",
-                desc: "Professional talking-head editing for finance creators — jump cuts, B-roll, captions, pacing, and retention hooks baked in.",
+                desc: "Professional talking-head editing for coaches and consultants — jump cuts, B-roll, captions, pacing, and retention hooks baked in.",
                 tags: ["72h delivery", "3 revisions", "16:9 optimised"],
               },
               {
@@ -437,7 +437,7 @@ export default function Home() {
               },
               {
                 icon: <BarChart3 className="w-7 h-7 mb-5 text-foreground/70" />,
-                title: "Light Channel Strategy",
+                title: "Content Strategy",
                 desc: "Available on the Authority plan — title and hook guidance, upload scheduling, and monthly performance review calls with Ateeb directly.",
                 tags: ["Authority plan", "Monthly calls", "Data-driven"],
               },
@@ -745,7 +745,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             <motion.div {...fadeIn}>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-border text-foreground/50 text-xs font-semibold uppercase tracking-wider mb-6">
-                Finance Creator — Germany
+                Service Provider — Germany
               </div>
               <h4 className="text-2xl font-display font-bold mb-4">Philip — Finance Coach & Educator</h4>
               <p className="text-foreground/60 leading-relaxed mb-6">
@@ -851,13 +851,13 @@ export default function Home() {
 
             <div className="space-y-6">
               <p className="text-foreground/65 text-lg leading-relaxed">
-                Hi, I'm Ateeb. I started Setspace because I kept watching finance experts with genuinely valuable insights struggle to build an audience — not because their ideas weren't good, but because editing was eating their time.
+                SetSpace is a remote content production agency. We handle video editing, reels, graphic design, and social media content for coaches, consultants, and service providers who need consistent output without managing an in-house team.
               </p>
               <p className="text-foreground/50 leading-relaxed">
-                I work closely with every client from brief to final file. No hand-offs to junior editors on your account. You get direct communication, fast turnarounds, and edits built around your audience's retention.
+                I work closely with every client from brief to final file. No hand-offs, no surprises. You get direct communication, fast turnarounds, and content that reflects your brand.
               </p>
               <p className="text-foreground/50 leading-relaxed">
-                Top Rated Plus on Upwork. ~$100K delivered. 4.9★ across 100+ projects.
+                3 years in. $100K+ delivered. Top Rated Plus on Upwork. 4.9★ across 100+ projects.
               </p>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 {[
@@ -971,8 +971,8 @@ export default function Home() {
           >
             {[
               {
-                q: "Do you understand finance content and compliance language?",
-                a: "Yes. We work with finance creators regularly and understand the tone, disclaimers, and sensitivities involved. We'll never cut out important compliance language, and we can style disclaimers to look clean rather than jarring.",
+                q: "What kinds of clients do you work with?",
+                a: "Coaches, consultants, service providers, and personal brands who need consistent video and social content without managing an in-house team. If you create knowledge-based content — whether on YouTube, LinkedIn, Instagram, or a podcast — we're a good fit.",
               },
               {
                 q: "Can you match my existing editing style?",
@@ -1028,7 +1028,7 @@ export default function Home() {
             <p className="text-xl text-foreground/45 mb-4 max-w-xl mx-auto leading-relaxed">
               Book a free 20-minute strategy call. We'll map out a publishing plan for your channel — no pressure, no pitch deck.
             </p>
-            <p className="text-foreground/30 text-sm mb-10">Trusted by finance creators and founders. Top Rated Plus on Upwork. ~$100K delivered.</p>
+            <p className="text-foreground/30 text-sm mb-10">Trusted by coaches, consultants, and founders. Top Rated Plus on Upwork. ~$100K delivered.</p>
             <a
               href={CALENDLY}
               target="_blank"
