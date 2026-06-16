@@ -122,20 +122,20 @@
 
 /* ── HERO: floating mockups ── */
 @keyframes floatA {
-  0%, 100% { transform: rotate(-3deg) translateY(0px);  }
-  50%       { transform: rotate(-3deg) translateY(-14px); }
+  0%, 100% { transform: rotate(-4deg) translateY(0px);  }
+  50%       { transform: rotate(-4deg) translateY(-12px); }
 }
 @keyframes floatB {
   0%, 100% { transform: rotate(0deg) translateY(0px);   }
   50%       { transform: rotate(0deg) translateY(-10px); }
 }
 @keyframes floatC {
-  0%, 100% { transform: rotate(3deg) translateY(0px);   }
-  50%       { transform: rotate(3deg) translateY(-16px); }
+  0%, 100% { transform: rotate(4deg) translateY(0px);   }
+  50%       { transform: rotate(4deg) translateY(-14px); }
 }
-.mockup-float-a { animation: floatA 6s ease-in-out infinite; }
-.mockup-float-b { animation: floatB 7.5s ease-in-out infinite 1s; }
-.mockup-float-c { animation: floatC 5.5s ease-in-out infinite 0.5s; }
+.mockup-float-a { animation: floatA 3s ease-in-out infinite; }
+.mockup-float-b { animation: floatB 3s ease-in-out infinite 1s; }
+.mockup-float-c { animation: floatC 3s ease-in-out infinite 0.5s; }
 
 /* ── HERO: 2-col grid ── */
 .hero-grid {
@@ -172,4 +172,30 @@
   display: flex;
   width: max-content;
   animation: ticker-scroll 30s linear infinite;
+}
+
+/* ── HERO inner ticker (25s) ── */
+.hero-inner-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 25s linear infinite;
+}
+
+/* ── GHOST oversized ticker (60s) ── */
+.ghost-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 60s linear infinite;
+}
+
+/* ── TEAM grid ── */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+@media (max-width: 640px) {
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
