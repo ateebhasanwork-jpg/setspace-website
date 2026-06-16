@@ -1,460 +1,235 @@
 import { useState, useEffect, useRef } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { ContactModal } from "@/components/ContactModal";
-import { Button } from "@/components/ui/button";
-import { Play, ArrowRight, Video, Youtube, Target, Wand2, Compass, Scissors, TrendingUp, Send, ChevronDown, Check, Zap, FileVideo, Clapperboard, BarChart3 } from "lucide-react";
-import { motion } from "framer-motion";
-import { useLang } from "@/contexts/LangContext";
+import { Play, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-function CountUp({ to, suffix = "", duration = 3200, delay = 700 }: { to: number; suffix?: string; duration?: number; delay?: number }) {
-  const [value, setValue] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    started.current = false;
-    setValue(0);
-    const el = ref.current;
-    if (!el) return;
-    let raf: number;
-    let timeout: ReturnType<typeof setTimeout>;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          timeout = setTimeout(() => {
-            const start = performance.now();
-            const tick = (now: number) => {
-              const p = Math.min((now - start) / duration, 1);
-              const ease = 1 - Math.pow(1 - p, 3);
-              setValue(Math.round(ease * to));
-              if (p < 1) raf = requestAnimationFrame(tick);
-            };
-            raf = requestAnimationFrame(tick);
-          }, delay);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => { observer.disconnect(); cancelAnimationFrame(raf); clearTimeout(timeout); };
-  }, [to, duration, delay]);
-
-  return <span ref={ref}>{value}{suffix}</span>;
-}
-
-function CountUpFloat({ to, suffix = "", duration = 3600, delay = 700, decimals = 1 }: { to: number; suffix?: string; duration?: number; delay?: number; decimals?: number }) {
-  const [value, setValue] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    started.current = false;
-    setValue(0);
-    const el = ref.current;
-    if (!el) return;
-    let raf: number;
-    let timeout: ReturnType<typeof setTimeout>;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          timeout = setTimeout(() => {
-            const start = performance.now();
-            const tick = (now: number) => {
-              const p = Math.min((now - start) / duration, 1);
-              const ease = 1 - Math.pow(1 - p, 3);
-              setValue(parseFloat((ease * to).toFixed(decimals)));
-              if (p < 1) raf = requestAnimationFrame(tick);
-            };
-            raf = requestAnimationFrame(tick);
-          }, delay);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => { observer.disconnect(); cancelAnimationFrame(raf); clearTimeout(timeout); };
-  }, [to, duration, delay]);
-
-  return <span ref={ref}>{value.toFixed(decimals)}{suffix}</span>;
-}
-
+const ORANGE = "#E84B1A";
+const BLACK = "#0A0A0A";
+const CHARCOAL = "#1A1A1A";
+const OFF_WHITE = "#F5F0EB";
+const GRAY = "#888888";
+const BORDER = "#2A2A2A";
 const CALENDLY = "https://calendly.com/ateebhasan-work/new-meeting";
+
+function CountUp({ to, suffix = "", duration = 2400, delay = 400 }: { to: number; suffix?: string; duration?: number; delay?: number }) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+  useEffect(() => {
+    started.current = false;
+    setValue(0);
+    const el = ref.current;
+    if (!el) return;
+    let raf: number;
+    let timeout: ReturnType<typeof setTimeout>;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        timeout = setTimeout(() => {
+          const start = performance.now();
+          const tick = (now: number) => {
+            const p = Math.min((now - start) / duration, 1);
+            const ease = 1 - Math.pow(1 - p, 3);
+            setValue(Math.round(ease * to));
+            if (p < 1) raf = requestAnimationFrame(tick);
+          };
+          raf = requestAnimationFrame(tick);
+        }, delay);
+      }
+    }, { threshold: 0.2 });
+    observer.observe(el);
+    return () => { observer.disconnect(); cancelAnimationFrame(raf); clearTimeout(timeout); };
+  }, [to, duration, delay]);
+  return <span ref={ref}>{value.toLocaleString()}{suffix}</span>;
+}
+
+const fadeUp = {
+  initial: { opacity: 0, y: 32 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.6, ease: "easeOut" },
+};
+
+const portfolioItems = [
+  { id: 1,  title: "Wellness Brand Video",         client: "Wellness Coach",           type: "Talking Head",    category: "YouTube", videoId: "kvbTfcAIymU" },
+  { id: 2,  title: "YouTube Long-Form Edit",        client: "Unexpected Atlanta Tours", type: "Long Form",       category: "YouTube", videoId: "VysdDxP_oPo" },
+  { id: 3,  title: "Testimonials Compilation",      client: "Iron Master Awards",       type: "Testimonials",    category: "YouTube", videoId: "bWmb_8dzgTk" },
+  { id: 4,  title: "Promotional Video",             client: "Kyle",                     type: "Promo Video",     category: "YouTube", videoId: "HBejF0eQ2TA" },
+  { id: 5,  title: "Talking Head Reel",             client: "Dr Lindsey",               type: "Talking Head",    category: "Reels",   videoId: "8iaVENpFw0I" },
+  { id: 6,  title: "Podcast Short Clip",            client: "A Steady Space",           type: "Podcast Short",   category: "Reels",   videoId: "W4Y0a2cz28E" },
+  { id: 7,  title: "Gym Lifestyle Reel",            client: "Muhammad Helal",           type: "Lifestyle Reel",  category: "Reels",   videoId: "gkaBUIK-Y_U" },
+  { id: 8,  title: "Informative Reel",              client: "Faceless Creator",         type: "Motion Graphics", category: "Reels",   videoId: "oamKPmEShfo" },
+  { id: 9,  title: "Brand Reel",                    client: "Klinik Europe",            type: "Reel",            category: "Reels",   videoId: "sum7TRFh28k" },
+  { id: 10, title: "Fitness Content Reel",          client: "Creator",                  type: "Lifestyle Reel",  category: "Reels",   videoId: "l5_OVdR_MWo" },
+  { id: 11, title: "Explainer Ad",                  client: "CyberCube",                type: "Explainer",       category: "Ads",     videoId: "IZo8Txy26xg" },
+  { id: 12, title: "UGC Ad",                        client: "Beast",                    type: "UGC Ad",          category: "Ads",     videoId: "EPi8_QC6ULE" },
+  { id: 13, title: "Meta Ad Creative",              client: "Flagship Media",           type: "Meta Ad",         category: "Ads",     videoId: "4louAvpt_W0" },
+  { id: 14, title: "AI Brand Video",                client: "Setspace",                 type: "AI Generated",    category: "AI",      videoId: "kQJRCMOGjvA" },
+  { id: 15, title: "AI Product Showcase",           client: "Tech Brand",               type: "AI Showcase",     category: "AI",      videoId: "NWxk_O1Zf6Q" },
+  { id: 16, title: "AI Brand Edit",                 client: "Creative Studio",          type: "AI Edit",         category: "AI",      videoId: "K3DznIcAKMo" },
+  { id: 17, title: "Motion Graphics Package",       client: "SBD Canada",               type: "Motion Graphics", category: "AI",      videoId: "D7gJMWCYMqc" },
+  { id: 18, title: "AI Talking Avatar",             client: "Brand",                    type: "AI Avatar",       category: "AI",      videoId: "fBfNpVJhBrE" },
+  { id: 19, title: "Brand Short Clip",              client: "Service Provider",         type: "Talking Head",    category: "Reels",   videoId: "kvbTfcAIymU" },
+  { id: 20, title: "YouTube Channel Trailer",       client: "Creator",                  type: "Channel Trailer", category: "YouTube", videoId: "bWmb_8dzgTk" },
+];
+
+const portfolioCategories = ["All", "YouTube", "Reels", "Ads", "AI"];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("All");
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [contactOpen, setContactOpen] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState<{ videoId: string; title: string; client: string; type: string } | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<typeof portfolioItems[0] | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
-  const teamScrollRef = useRef<HTMLDivElement>(null);
-  const teamScrollRaf = useRef<number>(0);
-  const { t } = useLang();
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  useEffect(() => {
-    const SPEED = 0.6;
-    const el = teamScrollRef.current;
-    if (!el) return;
-    let paused = false;
-
-    const autoScroll = () => {
-      if (!paused) {
-        el.scrollLeft += SPEED;
-        // Loop back to start when reaching end
-        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) {
-          el.scrollLeft = 0;
-        }
-      }
-      teamScrollRaf.current = requestAnimationFrame(autoScroll);
-    };
-    teamScrollRaf.current = requestAnimationFrame(autoScroll);
-
-    const onEnter = () => { paused = true; };
-    const onLeave = () => { paused = false; };
-    el.addEventListener("mouseenter", onEnter);
-    el.addEventListener("mouseleave", onLeave);
-    return () => {
-      cancelAnimationFrame(teamScrollRaf.current);
-      el.removeEventListener("mouseenter", onEnter);
-      el.removeEventListener("mouseleave", onLeave);
-    };
-  }, []);
-
-  const portfolioItems = [
-    { id: 1,  title: "Wellness Brand Video",         client: "Wellness Coach",          type: "Talking Head",    category: "YouTube", videoId: "kvbTfcAIymU" },
-    { id: 2,  title: "YouTube Long-Form Edit",      client: "Unexpected Atlanta Tours", type: "Long Form",       category: "YouTube", videoId: "VysdDxP_oPo" },
-    { id: 3,  title: "Testimonials Compilation",    client: "Iron Master Awards",      type: "Testimonials",    category: "YouTube", videoId: "bWmb_8dzgTk" },
-    { id: 4,  title: "Promotional Video",           client: "Kyle",                    type: "Promo Video",     category: "YouTube", videoId: "HBejF0eQ2TA" },
-    { id: 5,  title: "Talking Head Reel",           client: "Dr Lindsey",              type: "Talking Head",    category: "Reels",   videoId: "8iaVENpFw0I" },
-    { id: 6,  title: "Podcast Short Clip",          client: "A Steady Space",          type: "Podcast Short",   category: "Reels",   videoId: "W4Y0a2cz28E" },
-    { id: 7,  title: "Gym Lifestyle Reel",          client: "Muhammad Helal",          type: "Lifestyle Reel",  category: "Reels",   videoId: "gkaBUIK-Y_U" },
-    { id: 8,  title: "Informative Reel",            client: "Faceless Creator",        type: "Motion Graphics", category: "Reels",   videoId: "oamKPmEShfo" },
-    { id: 9,  title: "Brand Reel",                  client: "Klinik Europe",           type: "Reel",            category: "Reels",   videoId: "sum7TRFh28k" },
-    { id: 10, title: "Fitness Content Reel",        client: "Creator",                 type: "Lifestyle Reel",  category: "Reels",   videoId: "l5_OVdR_MWo" },
-    { id: 11, title: "Explainer Ad",                client: "CyberCube",               type: "Explainer",       category: "Ads",     videoId: "IZo8Txy26xg" },
-    { id: 12, title: "UGC Ad",                      client: "Beast",                   type: "UGC Ad",          category: "Ads",     videoId: "EPi8_QC6ULE" },
-    { id: 13, title: "Meta Ad Creative",            client: "Flagship Media",          type: "Meta Ad",         category: "Ads",     videoId: "4louAvpt_W0" },
-    { id: 14, title: "AI Brand Video",              client: "Setspace",                type: "AI Generated",    category: "AI",      videoId: "kQJRCMOGjvA" },
-    { id: 15, title: "AI Product Showcase",         client: "Tech Brand",              type: "AI Showcase",     category: "AI",      videoId: "NWxk_O1Zf6Q" },
-    { id: 16, title: "AI Brand Edit",               client: "Creative Studio",         type: "AI Edit",         category: "AI",      videoId: "K3DznIcAKMo" },
-    { id: 17, title: "Motion Graphics Package",     client: "SBD Canada",              type: "Motion Graphics", category: "AI",      videoId: "D7gJMWCYMqc" },
-    { id: 18, title: "AI Talking Avatar",           client: "Brand",                   type: "AI Avatar",       category: "AI",      videoId: "fBfNpVJhBrE" },
-    { id: 19, title: "Brand Short Clip",            client: "Service Provider",        type: "Talking Head",    category: "Reels",   videoId: "kvbTfcAIymU" },
-    { id: 20, title: "YouTube Channel Trailer",     client: "Creator",                 type: "Channel Trailer", category: "YouTube", videoId: "bWmb_8dzgTk" },
-  ];
-
-  const portfolioCategories = [t.portfolio.all, "YouTube", "Reels", "Ads", "AI"];
-
-  const filteredPortfolio = activeTab === t.portfolio.all
+  const filteredPortfolio = activeTab === "All"
     ? portfolioItems
-    : portfolioItems.filter(item => item.category === activeTab);
+    : portfolioItems.filter(p => p.category === activeTab);
 
-  const processIcons = [
-    <Clapperboard className="w-5 h-5" />,
-    <Scissors className="w-5 h-5" />,
-    <TrendingUp className="w-5 h-5" />,
+  const teamMembers = [
+    { name: "Zoha Adnan",      role: "Lead Gen Executive",          img: "zoha.jpeg" },
+    { name: "Jaffer Naqvi",    role: "Video Designer",              img: "jaffer.jpeg" },
+    { name: "Sani e Zehra",    role: "Social Media Designer",       img: "sani.jpeg" },
+    { name: "Muhammad Ashhad", role: "Video Editor",                img: "ashad.jpeg" },
+    { name: "Laiba Malik",     role: "HR & Ops Executive",          img: "laiba.jpeg" },
+    { name: "Zayd Saleem",     role: "Explainer Video Specialist",  img: "zayd.jpeg" },
+    { name: "Abdullah Khan",   role: "Motion Graphics Specialist",  img: "abdullah.jpeg" },
   ];
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 28 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-80px" },
-    transition: { duration: 0.7, ease: "easeOut" },
-  };
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden">
+    <div style={{ background: BLACK, color: OFF_WHITE, fontFamily: "'Inter', sans-serif", overflowX: "hidden" }}>
       <Navbar />
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden noise-overlay">
-        <div className="absolute inset-0 z-0 overflow-hidden" style={{ background: "linear-gradient(135deg, #020202 0%, #141414 30%, #0a0a0a 60%, #050505 100%)" }}>
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-            style={{ width: "177.78vh", height: "100vh", minWidth: "100%", minHeight: "56.25vw", objectFit: "cover" }}
-          >
-            <source src={`${import.meta.env.BASE_URL}videos/hero.mp4`} type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/70" />
-        </div>
-
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <div className="blob-1 absolute top-[10%] left-[15%] w-72 h-72 rounded-full bg-white/[0.04] blur-3xl" />
-          <div className="blob-2 absolute top-[30%] right-[10%] w-96 h-96 rounded-full bg-white/[0.03] blur-3xl" />
-          <div className="blob-3 absolute bottom-[20%] left-[40%] w-64 h-64 rounded-full bg-white/[0.03] blur-3xl" />
-        </div>
-
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, ease: "easeOut" }}
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-foreground/5 border border-border text-foreground/60 text-xs font-medium uppercase tracking-wider mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              Accepting New Clients
+      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: BLACK, paddingTop: "80px", position: "relative" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", textAlign: "center", width: "100%" }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+            <div style={{ color: ORANGE, fontSize: "11px", fontFamily: "'Inter', sans-serif", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "28px", fontWeight: 600 }}>
+              Content &amp; Marketing Engine
             </div>
-          </motion.div>
-
-          <motion.h1
-            className="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-[1.08] tracking-tight mb-6"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.15 }}
-          >
-            We build your marketing engine.<br />
-            <span className="text-gradient">You focus on your clients.</span>
-          </motion.h1>
-
-          <motion.p
-            className="text-lg md:text-xl text-foreground/55 max-w-2xl mx-auto mb-10 leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.3 }}
-          >
-            Done-for-you content production and marketing for therapists, counselors, and wellness professionals — strategy, reels, landing pages, and email sequences, all handled for you.
-          </motion.p>
-
-          <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.45 }}
-          >
-            <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-foreground text-background font-semibold rounded-xl hover:opacity-90 transition-opacity text-base"
-            >
-              Book a 20-min strategy call <ArrowRight className="w-4 h-4" />
-            </a>
-            <Button size="lg" variant="outline" className="w-full sm:w-auto px-8"
-              onClick={() => document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" })}
-            >
-              View Our Work
-            </Button>
-          </motion.div>
-
-          <motion.p
-            className="text-foreground/35 text-sm mt-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.9, delay: 0.6 }}
-          >
-            Trusted by coaches, consultants, and founders worldwide.
-          </motion.p>
-
-          <motion.div
-            className="flex flex-wrap justify-center gap-10 mt-12 pt-10 border-t border-border/50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.85 }}
-          >
-            <div className="text-center">
-              <div className="text-3xl font-display font-bold"><CountUp to={160} suffix="+" /></div>
-              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Clients Helped</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-display font-bold"><CountUp to={1000} suffix="+" /></div>
-              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Content Pieces Produced</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-display font-bold">3 Years</div>
-              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">In Production</div>
+            <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(52px, 8vw, 96px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", marginBottom: "28px", margin: "0 0 28px" }}>
+              We build your<br />marketing engine.<br />
+              <span style={{ color: ORANGE }}>You focus on your clients.</span>
+            </h1>
+            <p style={{ fontSize: "18px", color: GRAY, maxWidth: "620px", margin: "0 auto 44px", lineHeight: 1.75, fontWeight: 400 }}>
+              Done-for-you content production and marketing for therapists, counselors, and wellness professionals — strategy, reels, landing pages, and email sequences, all handled for you.
+            </p>
+            <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
+              <a
+                href={CALENDLY}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ background: ORANGE, color: BLACK, fontFamily: "'Bebas Neue', sans-serif", fontSize: "20px", letterSpacing: "1px", padding: "16px 48px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
+                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+              >
+                Get Free Audit
+              </a>
+              <button
+                onClick={() => document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" })}
+                style={{ background: "transparent", color: ORANGE, border: `1px solid ${ORANGE}`, fontFamily: "'Bebas Neue', sans-serif", fontSize: "20px", letterSpacing: "1px", padding: "16px 48px", cursor: "pointer", transition: "all 0.2s" }}
+                onMouseEnter={e => { e.currentTarget.style.background = ORANGE; e.currentTarget.style.color = BLACK; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = ORANGE; }}
+              >
+                See Our Work
+              </button>
             </div>
           </motion.div>
         </div>
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: ORANGE }} />
       </section>
 
-      {/* ── MARQUEE ── */}
-      <div className="py-5 border-y border-border overflow-hidden bg-card/50">
-        <div className="marquee-track">
-          {[...["Video Editing", "Reels & Shorts", "LinkedIn Clips", "Talking Head Editing", "Graphic Design", "Thumbnails", "Content Strategy", "Podcast Clips", "Done-For-You"], ...["Video Editing", "Reels & Shorts", "LinkedIn Clips", "Talking Head Editing", "Graphic Design", "Thumbnails", "Content Strategy", "Podcast Clips", "Done-For-You"]].map((item, i) => (
-            <span key={i} className="flex items-center gap-3 px-6 text-sm font-medium text-foreground/40 uppercase tracking-widest whitespace-nowrap">
-              {item}
-              <span className="w-1 h-1 rounded-full bg-foreground/20 inline-block" />
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* ── CLIENT LOGOS ── */}
-      <div className="py-12 border-b border-border bg-card/30 overflow-hidden">
-        <p className="text-center text-xs font-semibold text-foreground/30 uppercase tracking-widest mb-8">Trusted by</p>
-        <div className="marquee-track" style={{ animationDuration: "38s" }}>
+      {/* ── STATS ── */}
+      <section style={{ background: ORANGE, padding: "80px 24px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0", textAlign: "center" }}>
           {[
-            { name: "Flagship Media",     img: `${import.meta.env.BASE_URL}images/logo-flagship.png`,   url: "https://www.instagram.com/flagshipmedianyc/" },
-            { name: "A Steady Space",     img: `${import.meta.env.BASE_URL}images/logo-steadyspace.png`,url: "https://www.asteadyspace.com/" },
-            { name: "Enterprising Women", img: `${import.meta.env.BASE_URL}images/logo-ewf.png`,        url: "https://www.enterprisingwomenfoundation.org/" },
-            { name: "Unexpected Atlanta", img: `${import.meta.env.BASE_URL}images/logo-unexpected.png`, url: "https://unexpectedatlanta.com/" },
-            { name: "Pawsitive Paws",     img: `${import.meta.env.BASE_URL}images/logo-pawsitive.svg`,  url: "https://pawsitivepawsresort.com/" },
-            { name: "Sweet Bee Naturals", img: `${import.meta.env.BASE_URL}images/logo-sweetbee.png`,   url: "https://sweetbeenaturals.com/" },
-            { name: "Clutch Moving",      img: `${import.meta.env.BASE_URL}images/logo-clutch.png`,     url: "https://clutchmovingcompany.com/" },
-            { name: "SBD Canada",         img: `${import.meta.env.BASE_URL}images/logo-sbd.png`,        url: "https://sbdcanada.ca/" },
-            { name: "Flagship Media",     img: `${import.meta.env.BASE_URL}images/logo-flagship.png`,   url: "https://www.instagram.com/flagshipmedianyc/" },
-            { name: "A Steady Space",     img: `${import.meta.env.BASE_URL}images/logo-steadyspace.png`,url: "https://www.asteadyspace.com/" },
-            { name: "Enterprising Women", img: `${import.meta.env.BASE_URL}images/logo-ewf.png`,        url: "https://www.enterprisingwomenfoundation.org/" },
-            { name: "Unexpected Atlanta", img: `${import.meta.env.BASE_URL}images/logo-unexpected.png`, url: "https://unexpectedatlanta.com/" },
-            { name: "Pawsitive Paws",     img: `${import.meta.env.BASE_URL}images/logo-pawsitive.svg`,  url: "https://pawsitivepawsresort.com/" },
-            { name: "Sweet Bee Naturals", img: `${import.meta.env.BASE_URL}images/logo-sweetbee.png`,   url: "https://sweetbeenaturals.com/" },
-            { name: "Clutch Moving",      img: `${import.meta.env.BASE_URL}images/logo-clutch.png`,     url: "https://clutchmovingcompany.com/" },
-            { name: "SBD Canada",         img: `${import.meta.env.BASE_URL}images/logo-sbd.png`,        url: "https://sbdcanada.ca/" },
-          ].map((client, i) => (
-            <a key={i} href={client.url} target="_blank" rel="noopener noreferrer"
-              className="flex flex-col items-center gap-2.5 px-10 group cursor-pointer shrink-0"
+            { num: 160, suffix: "+", label: "Clients Helped" },
+            { num: 1000, suffix: "+", label: "Content Pieces Produced" },
+            { num: 3, suffix: " Years", label: "In Production" },
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              {...fadeUp}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              style={{ padding: "0 24px", borderRight: i < 2 ? `1px solid rgba(0,0,0,0.15)` : "none" }}
             >
-              <div className="w-20 h-12 flex items-center justify-center opacity-30 grayscale group-hover:opacity-90 group-hover:grayscale-0 transition-all duration-500">
-                <img src={client.img} alt={client.name} className="max-w-full max-h-full object-contain"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(48px, 7vw, 72px)", color: BLACK, lineHeight: 1, letterSpacing: "1px" }}>
+                <CountUp to={stat.num} suffix={stat.suffix} />
               </div>
-              <span className="text-[10px] font-medium text-foreground/25 group-hover:text-foreground/60 tracking-wider uppercase transition-colors duration-300 whitespace-nowrap">
-                {client.name}
-              </span>
-            </a>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: BLACK, marginTop: "8px", fontWeight: 500 }}>
+                {stat.label}
+              </div>
+            </motion.div>
           ))}
         </div>
-      </div>
-
-      {/* ── THE PROBLEM ── */}
-      <section className="py-28 bg-background">
-        <div className="max-w-4xl mx-auto px-6 md:px-12">
-          <motion.div {...fadeIn} className="mb-14 text-center">
-            <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">Sound familiar?</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold">The problem we solve.</h3>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { quote: "I have insights to share, but editing eats my week.", icon: "⏳" },
-              { quote: "I've tried freelancers — quality is inconsistent and onboarding is painful.", icon: "😤" },
-              { quote: "I want a content engine, not another vendor to manage.", icon: "🎯" },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
-                className="p-8 rounded-2xl bg-card border border-card-border flex flex-col gap-4"
-              >
-                <span className="text-3xl">{item.icon}</span>
-                <p className="text-foreground/70 text-lg leading-relaxed font-medium">"{item.quote}"</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
-      <section id="process" className="py-28 bg-card/40">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <motion.div {...fadeIn} className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">How It Works</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold">Three steps, zero stress.</h3>
+      {/* ── WHAT WE DO ── */}
+      <section id="services" style={{ background: CHARCOAL, padding: "120px 24px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <motion.div {...fadeUp} style={{ marginBottom: "64px" }}>
+            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>What We Do</div>
+            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
+              Everything you need to grow online
+            </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "2px" }} className="grid-cols-1 md:grid-cols-2">
             {[
-              {
-                icon: <Clapperboard className="w-5 h-5" />,
-                title: "You film.",
-                desc: "Talking head, podcast, Zoom — whatever cadence works for you. Film 2–4 hours a month and send it over. That's your only job.",
-              },
-              {
-                icon: <Scissors className="w-5 h-5" />,
-                title: "We produce.",
-                desc: "Long-form video edits, plus reels and clips, thumbnails, and LinkedIn-ready content — fully edited and ready to publish.",
-              },
-              {
-                icon: <TrendingUp className="w-5 h-5" />,
-                title: "You show up, consistently.",
-                desc: "Post across YouTube, Instagram, LinkedIn, and TikTok. Stay consistent online without content production eating your week.",
-              },
-            ].map((step, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
-                className="relative flex flex-col items-center text-center"
-              >
-                {i < 2 && (
-                  <div className="hidden md:block absolute top-5 start-[calc(50%+2.5rem)] end-[-50%] h-px bg-gradient-to-r from-border to-transparent" />
-                )}
-                <div className="w-10 h-10 rounded-full bg-foreground/[0.07] border border-border flex items-center justify-center text-foreground/50 mb-5 relative z-10">
-                  {step.icon}
-                </div>
-                <div className="text-5xl font-display font-black text-foreground/[0.05] mb-3 select-none leading-none">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <h4 className="text-xl font-display font-semibold mb-2">{step.title}</h4>
-                <p className="text-foreground/50 text-sm leading-relaxed">{step.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SERVICES ── */}
-      <section id="services" className="py-28 bg-background">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <motion.div {...fadeIn} className="mb-16">
-            <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">What We Do</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold max-w-xl">Everything your brand needs.</h3>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {[
-              {
-                icon: <Youtube className="w-7 h-7 mb-5 text-foreground/70" />,
-                title: "Long-Form Video Editing",
-                desc: "Professional talking-head editing for therapists, coaches, and consultants — jump cuts, B-roll, captions, pacing, and retention hooks baked in.",
-                tags: ["72h delivery", "3 revisions", "16:9 optimised"],
-              },
-              {
-                icon: <FileVideo className="w-7 h-7 mb-5 text-foreground/70" />,
-                title: "Shorts, Reels & LinkedIn Clips",
-                desc: "5–8 platform-ready clips from every long-form video. Repurpose your best content across YouTube Shorts, Instagram Reels, and LinkedIn.",
-                tags: ["48h delivery", "9:16 & 1:1 formats", "Strong hooks"],
-              },
-              {
-                icon: <Target className="w-7 h-7 mb-5 text-foreground/70" />,
-                title: "Thumbnails & Channel Design",
-                desc: "Click-worthy thumbnails, channel art, and end-screen templates designed to match your brand and drive higher CTR.",
-                tags: ["Same-day", "Unlimited variants", "A/B ready"],
-              },
-              {
-                icon: <BarChart3 className="w-7 h-7 mb-5 text-foreground/70" />,
-                title: "Content Strategy",
-                desc: "Available on the Authority plan — title and hook guidance, upload scheduling, and monthly performance review calls with Ateeb directly.",
-                tags: ["Authority plan", "Monthly calls", "Data-driven"],
-              },
+              { num: "01", title: "Content Production", desc: "Video editing, reels, and short-form content delivered every month — consistently and on-brand, without you lifting a finger in post." },
+              { num: "02", title: "Landing Pages", desc: "High-converting pages designed and built for your practice. Capture leads, book sessions, and grow your email list on autopilot." },
+              { num: "03", title: "Email Nurture Sequences", desc: "Automated email flows that turn leads into booked sessions. Written, designed, and delivered — ready to connect with your list." },
+              { num: "04", title: "Content Strategy", desc: "A clear plan for what to post, when, and why. Built around your niche, your audience, and your goals — updated monthly." },
             ].map((service, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group p-8 rounded-2xl bg-card border border-card-border hover:border-foreground/20 transition-all duration-400 flex flex-col"
+                {...fadeUp}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                style={{ background: BLACK, borderTop: `3px solid ${ORANGE}`, padding: "48px 40px", cursor: "default" }}
               >
-                {service.icon}
-                <h4 className="text-xl font-display font-semibold mb-3">{service.title}</h4>
-                <p className="text-foreground/50 leading-relaxed text-sm mb-5 flex-1">{service.desc}</p>
-                <div className="flex flex-wrap gap-2 pt-4 border-t border-border/50">
-                  {service.tags.map((tag, ti) => (
-                    <span key={ti} className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-foreground/[0.06] border border-border text-foreground/40 uppercase tracking-wide">
-                      {tag}
-                    </span>
-                  ))}
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "48px", color: ORANGE, lineHeight: 1, marginBottom: "20px", letterSpacing: "1px" }}>
+                  {service.num}
                 </div>
+                <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "28px", color: OFF_WHITE, letterSpacing: "0.5px", marginBottom: "16px", margin: "0 0 16px" }}>
+                  {service.title}
+                </h3>
+                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
+                  {service.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHO WE HELP ── */}
+      <section style={{ background: BLACK, padding: "120px 24px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <motion.div {...fadeUp} style={{ marginBottom: "72px" }}>
+            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>Who We Help</div>
+            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
+              Built for wellness professionals
+            </h2>
+          </motion.div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2px" }} className="grid-cols-1 md:grid-cols-3">
+            {[
+              { title: "Therapists & Counselors", desc: "Build trust online, attract ideal clients, and stay consistent without adding hours to your week." },
+              { title: "Wellness Coaches", desc: "Turn your expertise into compelling content that grows your audience and fills your calendar with qualified leads." },
+              { title: "Mental Health Practitioners", desc: "Grow your practice with professional content that reflects the care and quality you bring to every session." },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                {...fadeUp}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                style={{ borderTop: `1px solid ${BORDER}`, paddingTop: "40px", paddingRight: "40px" }}
+              >
+                <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "26px", color: OFF_WHITE, letterSpacing: "0.5px", marginBottom: "16px", margin: "0 0 16px" }}>
+                  {item.title}
+                </h3>
+                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
+                  {item.desc}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -462,113 +237,110 @@ export default function Home() {
       </section>
 
       {/* ── PORTFOLIO ── */}
-      <section id="work" className="py-28 bg-card/40">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14">
-            <motion.div {...fadeIn}>
-              <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">Selected Work</h2>
-              <h3 className="text-4xl md:text-5xl font-display font-bold">Proof of performance.</h3>
-            </motion.div>
-            <motion.div {...fadeIn} className="flex flex-wrap gap-2">
+      <section id="work" style={{ background: CHARCOAL, padding: "120px 24px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <motion.div {...fadeUp} style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "32px", marginBottom: "56px" }}>
+            <div>
+              <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>Selected Work</div>
+              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
+                Proof of performance.
+              </h2>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
               {portfolioCategories.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveTab(cat)}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                    activeTab === cat
-                      ? "bg-foreground text-background"
-                      : "bg-card border border-border text-foreground/60 hover:text-foreground hover:border-foreground/30"
-                  }`}
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    letterSpacing: "1px",
+                    textTransform: "uppercase",
+                    padding: "8px 20px",
+                    background: activeTab === cat ? ORANGE : "transparent",
+                    color: activeTab === cat ? BLACK : GRAY,
+                    border: `1px solid ${activeTab === cat ? ORANGE : BORDER}`,
+                    cursor: "pointer",
+                    transition: "all 0.2s",
+                  }}
                 >
                   {cat}
                 </button>
               ))}
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 items-start">
-            <div className="relative">
-              <div className="divide-y divide-border/50 max-h-[520px] overflow-y-auto pr-1" style={{ scrollbarWidth: "thin", scrollbarColor: "hsl(var(--border)) transparent" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "24px" }} className="lg:grid-cols-[3fr_2fr]">
+            <div>
+              <div style={{ borderTop: `1px solid ${BORDER}`, maxHeight: "520px", overflowY: "auto", scrollbarWidth: "thin", scrollbarColor: `${BORDER} transparent` }}>
                 {filteredPortfolio.map((item, i) => (
                   <motion.div
                     key={item.id}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.03 }}
+                    transition={{ duration: 0.25, delay: i * 0.025 }}
                     onMouseEnter={() => setHoveredItem(item)}
                     onMouseLeave={() => setHoveredItem(null)}
                     onClick={() => setActiveVideo({ videoId: item.videoId, title: item.title })}
-                    className="group flex items-center gap-5 py-5 cursor-pointer"
+                    style={{ display: "flex", alignItems: "center", gap: "20px", padding: "18px 0", borderBottom: `1px solid ${BORDER}`, cursor: "pointer" }}
                   >
-                    <span className="font-mono text-xs text-foreground/20 w-7 flex-shrink-0 select-none group-hover:text-foreground/50 transition-colors duration-200">
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: BORDER, width: "28px", flexShrink: 0, fontWeight: 600 }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-display font-semibold text-[15px] leading-snug group-hover:translate-x-1 transition-transform duration-200 truncate">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 600, color: OFF_WHITE, lineHeight: 1.3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {item.title}
                       </div>
-                      <div className="text-xs text-foreground/40 mt-0.5">{item.client}</div>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "12px", color: GRAY, marginTop: "2px" }}>{item.client}</div>
                     </div>
-                    <span className="hidden md:block text-[11px] text-foreground/30 group-hover:text-foreground/50 transition-colors duration-200 flex-shrink-0">
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: GRAY, flexShrink: 0, display: "none" }} className="hidden md:block">
                       {item.type}
                     </span>
-                    <span className="hidden sm:block text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full border border-border text-foreground/40 group-hover:border-foreground/30 group-hover:text-foreground/60 transition-all duration-200 flex-shrink-0">
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 600, letterSpacing: "1px", textTransform: "uppercase", padding: "4px 10px", border: `1px solid ${BORDER}`, color: GRAY, flexShrink: 0 }}>
                       {item.category}
                     </span>
-                    <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center flex-shrink-0 group-hover:border-foreground/50 group-hover:bg-foreground group-hover:text-background transition-all duration-200">
-                      <Play className="w-3 h-3 ms-0.5" />
+                    <div style={{ width: "32px", height: "32px", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: hoveredItem?.id === item.id ? ORANGE : "transparent", transition: "background 0.2s" }}>
+                      <Play style={{ width: "12px", height: "12px", color: hoveredItem?.id === item.id ? BLACK : OFF_WHITE, marginLeft: "2px" }} />
                     </div>
                   </motion.div>
                 ))}
               </div>
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-card/40 to-transparent rounded-b-xl" />
             </div>
 
-            <div className="hidden lg:block sticky top-24">
-              <div className="relative aspect-video rounded-2xl overflow-hidden bg-card border border-border/50">
+            <div className="hidden lg:block" style={{ position: "sticky", top: "88px" }}>
+              <div style={{ aspectRatio: "16/9", background: BLACK, border: `1px solid ${BORDER}`, overflow: "hidden", position: "relative" }}>
                 {hoveredItem ? (
                   <>
                     <motion.img
                       key={hoveredItem.videoId}
                       initial={{ opacity: 0, scale: 1.04 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.35 }}
+                      transition={{ duration: 0.3 }}
                       src={`https://img.youtube.com/vi/${hoveredItem.videoId}/maxresdefault.jpg`}
                       onError={e => { (e.currentTarget as HTMLImageElement).src = `https://img.youtube.com/vi/${hoveredItem.videoId}/hqdefault.jpg`; }}
                       alt={hoveredItem.title}
-                      className="absolute inset-0 w-full h-full object-cover"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-5">
-                      <div className="text-[10px] font-semibold uppercase tracking-widest text-white/50 mb-1">{hoveredItem.client}</div>
-                      <div className="font-display font-bold text-white text-base leading-tight">{hoveredItem.title}</div>
-                      <div className="text-[11px] text-white/40 mt-0.5">{hoveredItem.type}</div>
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)" }} />
+                    <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "20px" }}>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", color: ORANGE, marginBottom: "4px" }}>{hoveredItem.client}</div>
+                      <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", color: OFF_WHITE, letterSpacing: "0.5px" }}>{hoveredItem.title}</div>
                     </div>
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                      <div className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-                        <Play className="w-5 h-5 text-white ms-0.5" fill="white" />
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>
+                      <div style={{ width: "56px", height: "56px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Play style={{ width: "20px", height: "20px", color: "white", marginLeft: "3px" }} fill="white" />
                       </div>
                     </div>
                   </>
                 ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-foreground/20 select-none">
-                    <div className="w-12 h-12 rounded-full border border-border/50 flex items-center justify-center">
-                      <Play className="w-4 h-4 ms-0.5" />
+                  <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", color: GRAY }}>
+                    <div style={{ width: "44px", height: "44px", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Play style={{ width: "16px", height: "16px", color: GRAY, marginLeft: "2px" }} />
                     </div>
-                    <span className="text-xs tracking-widest uppercase">Hover to preview</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>Hover to preview</span>
                   </div>
                 )}
-              </div>
-              <div className="grid grid-cols-3 gap-3 mt-4">
-                {(["YouTube", "Reels", "Ads"] as const).map(cat => {
-                  const count = portfolioItems.filter(p => p.category === cat).length;
-                  return (
-                    <div key={cat} className="bg-card rounded-xl border border-border/50 p-3 text-center">
-                      <div className="font-display font-bold text-lg">{count}</div>
-                      <div className="text-[10px] text-foreground/40 uppercase tracking-wider mt-0.5">{cat}</div>
-                    </div>
-                  );
-                })}
               </div>
             </div>
           </div>
@@ -576,121 +348,115 @@ export default function Home() {
       </section>
 
       {/* VIDEO MODAL */}
-      {activeVideo && (
-        <div
-          className="fixed inset-0 z-50 bg-black/92 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setActiveVideo(null)}
-        >
+      <AnimatePresence>
+        {activeVideo && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.2 }}
-            className="relative w-full max-w-4xl"
-            onClick={e => e.stopPropagation()}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveVideo(null)}
+            style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(0,0,0,0.94)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
           >
-            <div className="flex items-center justify-between mb-4 px-1">
-              <h3 className="text-white font-display font-semibold text-lg">{activeVideo.title}</h3>
-              <button onClick={() => setActiveVideo(null)} className="text-white/50 hover:text-white transition-colors text-3xl leading-none">×</button>
-            </div>
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
-              <iframe
-                src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1&rel=0`}
-                title={activeVideo.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 w-full h-full"
-              />
-            </div>
+            <motion.div
+              initial={{ scale: 0.96 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.96 }}
+              onClick={e => e.stopPropagation()}
+              style={{ width: "100%", maxWidth: "900px" }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", padding: "0 4px" }}>
+                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", color: OFF_WHITE, letterSpacing: "0.5px" }}>{activeVideo.title}</span>
+                <button onClick={() => setActiveVideo(null)} style={{ fontFamily: "'Inter', sans-serif", fontSize: "28px", color: GRAY, background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}>×</button>
+              </div>
+              <div style={{ position: "relative", aspectRatio: "16/9", background: BLACK }}>
+                <iframe
+                  src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1&rel=0`}
+                  title={activeVideo.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
+                />
+              </div>
+            </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
-      {/* ── PRICING ── */}
-      <section id="pricing" className="py-28 bg-background">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <motion.div {...fadeIn} className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">Pricing</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold">Simple, transparent pricing.</h3>
-            <p className="text-foreground/50 mt-4 leading-relaxed">No hidden fees. No lock-in contracts. Pick a plan and start publishing this month.</p>
+      {/* ── PACKAGES ── */}
+      <section id="pricing" style={{ background: CHARCOAL, padding: "120px 24px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <motion.div {...fadeUp} style={{ textAlign: "center", marginBottom: "72px" }}>
+            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>Pricing</div>
+            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: "0 0 16px" }}>
+              Simple, transparent packages
+            </h2>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "16px", color: GRAY, margin: 0 }}>
+              No hidden fees. No lock-in contracts. Start this month.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2px", alignItems: "start" }} className="grid-cols-1 md:grid-cols-3">
             {[
               {
                 name: "Starter",
                 price: "$800",
-                period: "/month",
-                desc: "For coaches and service providers getting started with consistent content.",
-                features: [
-                  "8 reels / month",
-                  "Content strategy",
-                  "Basic social media management",
-                ],
-                cta: "Book a Strategy Call",
+                period: "/mo",
+                desc: "For wellness professionals getting started with consistent content.",
+                features: ["8 reels / month", "Content strategy", "Basic social media management"],
                 highlight: false,
               },
               {
                 name: "Growth",
                 price: "$1,500",
-                period: "/month",
-                desc: "For growing brands ready to expand their content and capture leads.",
-                features: [
-                  "12 reels + 6 designs / month",
-                  "Content strategy",
-                  "Landing page (one-time setup)",
-                  "Email nurture sequence (3 emails)",
-                ],
-                cta: "Most Popular",
+                period: "/mo",
+                desc: "For growing practices ready to expand content and capture leads.",
+                features: ["12 reels + 6 designs / month", "Content strategy", "Landing page (one-time setup)", "Email nurture sequence (3 emails)"],
                 highlight: true,
               },
               {
                 name: "Full Engine",
                 price: "$2,500",
-                period: "/month",
-                desc: "For established service providers who want a complete done-for-you content operation.",
-                features: [
-                  "Full content production (reels, designs, video)",
-                  "Strategy + landing page",
-                  "Full email nurture sequence",
-                  "Monthly performance review",
-                ],
-                cta: "Book a Strategy Call",
+                period: "/mo",
+                desc: "A complete done-for-you content and marketing operation.",
+                features: ["Full content production (reels, designs, video)", "Strategy + landing page", "Full email nurture sequence", "Monthly performance review"],
                 highlight: false,
               },
             ].map((plan, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                {...fadeUp}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className={`relative flex flex-col rounded-2xl p-8 border transition-all duration-300 ${
-                  plan.highlight
-                    ? "bg-foreground text-background border-foreground shadow-2xl scale-[1.02]"
-                    : "bg-card border-card-border hover:border-foreground/20"
-                }`}
+                style={{
+                  background: BLACK,
+                  padding: "48px 40px",
+                  borderTop: plan.highlight ? `3px solid ${ORANGE}` : `3px solid ${BORDER}`,
+                  borderLeft: plan.highlight ? `1px solid ${ORANGE}` : "none",
+                  borderRight: plan.highlight ? `1px solid ${ORANGE}` : "none",
+                  borderBottom: plan.highlight ? `1px solid ${ORANGE}` : "none",
+                  position: "relative",
+                  marginTop: plan.highlight ? "-8px" : "0",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
                 {plan.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-background text-foreground text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-border flex items-center gap-1.5">
-                      <Zap className="w-3 h-3" /> Most Popular
-                    </span>
+                  <div style={{ position: "absolute", top: "-1px", left: "40px", background: ORANGE, color: BLACK, fontFamily: "'Bebas Neue', sans-serif", fontSize: "13px", letterSpacing: "1px", padding: "4px 14px" }}>
+                    Most Popular
                   </div>
                 )}
-                <div className="mb-6">
-                  <h4 className={`text-sm font-semibold uppercase tracking-widest mb-3 ${plan.highlight ? "text-background/60" : "text-foreground/50"}`}>{plan.name}</h4>
-                  <div className="flex items-end gap-1 mb-3">
-                    <span className="text-4xl font-display font-bold">{plan.price}</span>
-                    {plan.period && <span className={`text-sm mb-1 ${plan.highlight ? "text-background/50" : "text-foreground/40"}`}>{plan.period}</span>}
+                <div style={{ marginBottom: "32px" }}>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", color: GRAY, marginBottom: "16px" }}>{plan.name}</div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "6px", marginBottom: "12px" }}>
+                    <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "48px", color: OFF_WHITE, lineHeight: 1, letterSpacing: "1px" }}>{plan.price}</span>
+                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: GRAY }}>{plan.period}</span>
                   </div>
-                  <p className={`text-sm leading-relaxed ${plan.highlight ? "text-background/60" : "text-foreground/50"}`}>{plan.desc}</p>
+                  <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: GRAY, lineHeight: 1.6, margin: 0 }}>{plan.desc}</p>
                 </div>
-                <ul className="space-y-3 mb-8 flex-1">
+                <ul style={{ listStyle: "none", padding: 0, margin: "0 0 40px", flex: 1 }}>
                   {plan.features.map((f, fi) => (
-                    <li key={fi} className="flex items-start gap-2.5 text-sm">
-                      <Check className={`w-4 h-4 mt-0.5 shrink-0 ${plan.highlight ? "text-background/70" : "text-foreground/40"}`} />
-                      <span className={plan.highlight ? "text-background/80" : "text-foreground/65"}>{f}</span>
+                    <li key={fi} style={{ display: "flex", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
+                      <Check style={{ width: "14px", height: "14px", color: ORANGE, marginTop: "2px", flexShrink: 0 }} />
+                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: GRAY, lineHeight: 1.5 }}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -698,248 +464,160 @@ export default function Home() {
                   href={CALENDLY}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`w-full py-3 rounded-xl text-sm font-semibold transition-all duration-200 border text-center block ${
-                    plan.highlight
-                      ? "bg-background text-foreground border-background hover:bg-background/90"
-                      : "bg-transparent border-border text-foreground hover:bg-foreground/5 hover:border-foreground/30"
-                  }`}
+                  style={{ background: plan.highlight ? ORANGE : "transparent", color: plan.highlight ? BLACK : ORANGE, border: `1px solid ${plan.highlight ? ORANGE : BORDER}`, fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px", letterSpacing: "1px", padding: "14px 0", textDecoration: "none", textAlign: "center", display: "block", transition: "all 0.2s" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = ORANGE; e.currentTarget.style.color = BLACK; e.currentTarget.style.borderColor = ORANGE; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = plan.highlight ? ORANGE : "transparent"; e.currentTarget.style.color = plan.highlight ? BLACK : ORANGE; e.currentTarget.style.borderColor = plan.highlight ? ORANGE : BORDER; }}
                 >
-                  {plan.cta} <ArrowRight className="inline w-3.5 h-3.5 ms-1.5 -mt-0.5" />
+                  Get Started
                 </a>
               </motion.div>
             ))}
           </div>
-
-          <motion.p {...fadeIn} className="text-center text-foreground/35 text-sm mt-10">
-            Not sure which plan fits?{" "}
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="text-foreground/60 hover:text-foreground underline underline-offset-2 transition-colors">
-              Book a free 20-min call and we'll figure it out →
-            </a>
-          </motion.p>
         </div>
       </section>
 
-      {/* ── ABOUT / TEAM ── */}
-      <section id="team" className="py-28 bg-background">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <motion.div {...fadeIn} className="mb-14">
-            <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">About</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold">Meet the team.</h3>
+      {/* ── ABOUT ── */}
+      <section id="team" style={{ background: BLACK, padding: "120px 24px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <motion.div {...fadeUp} style={{ marginBottom: "72px" }}>
+            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>About SetSpace</div>
+            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(36px, 4.5vw, 56px)", color: OFF_WHITE, lineHeight: 1.05, letterSpacing: "1px", margin: 0, maxWidth: "700px" }}>
+              We are a remote content and marketing agency
+            </h2>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16"
-          >
-            <div className="relative group overflow-hidden rounded-2xl bg-muted aspect-[4/5] max-w-sm mx-auto md:mx-0 w-full">
-              <img
-                src={`${import.meta.env.BASE_URL}images/ateeb.jpg`}
-                alt="Ateeb Hasan"
-                className="w-full h-full object-cover scale-110 group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-              <div className="absolute bottom-5 start-5">
-                <div className="text-white font-display font-bold text-lg">Ateeb Hasan</div>
-                <div className="text-white/60 text-sm">Founder & Creative Lead</div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <p className="text-foreground/65 text-lg leading-relaxed">
-                SetSpace is a remote content and marketing agency helping therapists, counselors, and wellness professionals grow online. We handle strategy, video editing, reels, landing pages, and email nurture sequences — so you can focus on your clients.
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }} className="grid-cols-1 md:grid-cols-2">
+            <motion.div {...fadeUp}>
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "17px", color: OFF_WHITE, lineHeight: 1.8, marginBottom: "24px" }}>
+                We help therapists, counselors, and wellness professionals generate leads and grow online. We handle strategy, video editing, reels, landing pages, and email nurture sequences — so you can focus on your clients.
               </p>
-              <p className="text-foreground/50 leading-relaxed">
-                I work closely with every client from brief to final file. No hand-offs, no surprises. You get direct communication, fast turnarounds, and content that reflects your brand.
-              </p>
-              <p className="text-foreground/50 leading-relaxed">
+              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.8, marginBottom: "40px" }}>
                 3 years in. 160+ clients helped. 1,000+ content pieces produced.
               </p>
-              <div className="grid grid-cols-2 gap-4 pt-2">
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2px" }}>
                 {[
                   { value: "160+", label: "Clients Helped" },
-                  { value: "1,000+", label: "Content Pieces Produced" },
+                  { value: "1,000+", label: "Content Pieces" },
                   { value: "4.9★", label: "Average Rating" },
                   { value: "48h", label: "Avg. Turnaround" },
-                ].map((fact, i) => (
-                  <div key={i} className="p-4 rounded-xl bg-card border border-border">
-                    <div className="text-2xl font-display font-bold mb-0.5">{fact.value}</div>
-                    <div className="text-xs text-foreground/40 uppercase tracking-widest">{fact.label}</div>
+                ].map((stat, i) => (
+                  <div key={i} style={{ background: CHARCOAL, padding: "24px", borderTop: `1px solid ${BORDER}` }}>
+                    <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "32px", color: OFF_WHITE, letterSpacing: "1px", lineHeight: 1 }}>{stat.value}</div>
+                    <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: GRAY, marginTop: "6px", letterSpacing: "1px", textTransform: "uppercase", fontWeight: 600 }}>{stat.label}</div>
                   </div>
                 ))}
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* Team */}
-          <div className="pt-12 border-t border-border">
-            <h4 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-8">Also on the team</h4>
-            <div ref={teamScrollRef} className="flex gap-4 overflow-x-auto -mx-6 px-6 hide-scrollbar">
-              {[
-                { name: "Zoha Adnan",       role: "Lead Gen Executive",          img: "zoha.jpeg",     objPos: "center 8%" },
-                { name: "Jaffer Naqvi",     role: "Video Designer",              img: "jaffer.jpeg",   objPos: "center 5%" },
-                { name: "Sani e Zehra",     role: "Social Media Designer",       img: "sani.jpeg",     objPos: "center 5%" },
-                { name: "Muhammad Ashhad",  role: "Video Editor",                img: "ashad.jpeg",    objPos: "center 5%" },
-                { name: "Laiba Malik",      role: "HR & Ops Executive",          img: "laiba.jpeg",    objPos: "center 8%" },
-                { name: "Zayd Saleem",      role: "Explainer Video Specialist",  img: "zayd.jpeg",     objPos: "center 5%" },
-                { name: "Abdullah Khan",    role: "Motion Graphics Specialist",  img: "abdullah.jpeg", objPos: "center 5%" },
-              ].map((member, i) => (
-                <motion.div
-                  key={member.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                  className="relative group flex-shrink-0 w-44 overflow-hidden rounded-2xl bg-muted aspect-[3/4]"
-                >
-                  <img
-                    src={`${import.meta.env.BASE_URL}images/${member.img}?v=2`}
-                    alt={member.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-700 brightness-90"
-                    style={{ objectPosition: member.objPos }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-                  <div className="absolute bottom-3 start-3 end-3">
-                    <div className="text-white font-display font-semibold text-xs leading-tight">{member.name}</div>
-                    <div className="text-white/55 text-[10px] mt-0.5">{member.role}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+            <motion.div {...fadeUp} transition={{ delay: 0.15 }}>
+              <div style={{ position: "relative" }}>
+                <img
+                  src={`${import.meta.env.BASE_URL}images/ateeb.jpg`}
+                  alt="Ateeb Hasan — Founder"
+                  style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", display: "block" }}
+                />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85), transparent)", padding: "32px 24px 24px" }}>
+                  <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", color: OFF_WHITE, letterSpacing: "0.5px" }}>Ateeb Hasan</div>
+                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: GRAY, marginTop: "4px" }}>Founder & Creative Lead</div>
+                </div>
+              </div>
 
-          {/* Why founders choose Setspace — testimonials */}
-          <div className="mt-16 pt-12 border-t border-border">
-            <h4 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-10">Why founders choose Setspace</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {[
-                { quote: "Ateeb and his team are the best I've worked with. Their service is beyond just video editing. They've given me strategies, suggestions to grow, delivered more than what I asked for, and stayed in touch through the entire process.", name: "Muhammad Helal", role: "Founder, Flagship Media", initials: "MH" },
-                { quote: "Ateeb has been a phenomenal collaborator. He revamped my entire system and processes with ease, guided me on best practices, went beyond the scope without hesitating, and delivered well before deadline.", name: "Davina Hehn", role: "Founder, A Steady Space", initials: "DH" },
-                { quote: "Amazing job. The work was clear, efficient, and completely exceeded my expectations. Communication was smooth throughout. I will absolutely hire Setspace again.", name: "Dr. Luzelena Rivers", role: "Enterprising Women Foundation", initials: "ER" },
-              ].map((r, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="p-6 rounded-2xl bg-card border border-card-border flex flex-col justify-between"
-                >
-                  <div className="flex gap-0.5 mb-4">
-                    {Array.from({ length: 5 }).map((_, s) => (
-                      <svg key={s} className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "2px", marginTop: "2px" }}>
+                {teamMembers.slice(0, 6).map(member => (
+                  <div key={member.name} style={{ flex: "1 1 calc(33.33% - 2px)", minWidth: "80px", position: "relative", aspectRatio: "1", overflow: "hidden" }}>
+                    <img
+                      src={`${import.meta.env.BASE_URL}images/${member.img}`}
+                      alt={member.name}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(20%)" }}
+                    />
+                    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", transition: "background 0.2s" }} />
                   </div>
-                  <blockquote className="text-foreground/65 text-sm leading-relaxed flex-1">"{r.quote}"</blockquote>
-                  <div className="flex items-center gap-2.5 mt-5 pt-4 border-t border-border/50">
-                    <div className="w-8 h-8 rounded-full bg-foreground/10 border border-border flex items-center justify-center text-[9px] font-bold text-foreground/50 shrink-0">{r.initials}</div>
-                    <div>
-                      <div className="font-semibold text-xs text-foreground">{r.name}</div>
-                      <div className="text-[10px] text-foreground/40">{r.role}</div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* ── FAQ ── */}
-      <section className="py-28 bg-card/40">
-        <div className="max-w-3xl mx-auto px-6 md:px-12">
-          <motion.div {...fadeIn} className="text-center mb-14">
-            <h2 className="text-xs font-semibold text-foreground/40 uppercase tracking-widest mb-3">FAQ</h2>
-            <h3 className="text-4xl md:text-5xl font-display font-bold">Common questions.</h3>
+      <section style={{ background: CHARCOAL, padding: "120px 24px" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <motion.div {...fadeUp} style={{ marginBottom: "64px" }}>
+            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>FAQ</div>
+            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 60px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
+              Common questions
+            </h2>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-2"
-          >
+          <div>
             {[
-              {
-                q: "What kinds of clients do you work with?",
-                a: "Therapists, counselors, wellness coaches, and service-based professionals who need consistent content and marketing without managing an in-house team. If you want to grow online while focusing on your clients — we're a good fit.",
-              },
-              {
-                q: "Can you match my existing editing style?",
-                a: "Absolutely. Send us 2–3 of your favourite examples — from your own channel or channels you admire — and we'll match the pacing, caption style, colour grade, and overall feel before we touch your footage.",
-              },
-              {
-                q: "What's the turnaround time?",
-                a: "Reels and short clips are delivered within 48 hours. Long-form video edits within 72 hours. On the Full Engine plan, same-day delivery is available for urgent content.",
-              },
-              {
-                q: "How does feedback and revisions work?",
-                a: "You review the edit and leave timestamped comments — we use a simple Google Drive or Frame.io link depending on your preference. We turn around revisions within 24 hours. Starter includes 3 revisions per piece; Growth and Full Engine include unlimited.",
-              },
-              {
-                q: "What happens if I'm not happy?",
-                a: "We'll make it right. No awkward conversations, no hidden fees. If after revisions you're genuinely not satisfied with the output, we'll refund that video — no questions asked. We'd rather earn your trust long-term than keep money for work you're unhappy with.",
-              },
+              { q: "What kinds of clients do you work with?", a: "Therapists, counselors, wellness coaches, and service-based professionals who need consistent content and marketing without managing an in-house team. If you want to grow online while focusing on your clients — we're a good fit." },
+              { q: "How does the process work?", a: "You share your goals, existing content, and brand references. We build a content plan, start producing, and deliver on a set schedule every month. You review, approve, and publish — or we handle that too." },
+              { q: "What's the turnaround time?", a: "Reels and short clips are delivered within 48 hours. Long-form video edits within 72 hours. On the Full Engine plan, same-day delivery is available for urgent content." },
+              { q: "How does feedback and revisions work?", a: "You review via Google Drive or Frame.io and leave comments. We turn around revisions within 24 hours. Starter includes 3 revisions per piece; Growth and Full Engine include unlimited." },
+              { q: "Is there a contract?", a: "No lock-in contracts. We work month-to-month. We believe results are the only reason to stay — if we're not delivering, you shouldn't be billed." },
             ].map((item, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="border border-border rounded-xl overflow-hidden transition-all duration-200 hover:border-foreground/20"
+                {...fadeUp}
+                transition={{ delay: i * 0.06 }}
+                style={{ borderBottom: `1px solid ${BORDER}` }}
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between px-6 py-5 text-start gap-4"
+                  style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px 0", background: "none", border: "none", cursor: "pointer", gap: "24px", textAlign: "left" }}
                 >
-                  <span className="font-medium text-foreground leading-snug">{item.q}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 text-foreground/40 shrink-0 transition-transform duration-300 ${openFaq === i ? "rotate-180" : ""}`}
-                  />
+                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "20px", color: OFF_WHITE, letterSpacing: "0.5px", lineHeight: 1.2 }}>{item.q}</span>
+                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "24px", color: ORANGE, flexShrink: 0, lineHeight: 1 }}>
+                    {openFaq === i ? "−" : "+"}
+                  </span>
                 </button>
-                <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaq === i ? "max-h-48 opacity-100" : "max-h-0 opacity-0"}`}
-                >
-                  <p className="px-6 pb-5 text-sm text-foreground/55 leading-relaxed">{item.a}</p>
-                </div>
-              </div>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.75, paddingBottom: "24px", margin: 0 }}>
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ── CLOSING CTA ── */}
-      <section className="py-28 relative overflow-hidden bg-background">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="blob-1 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-foreground/[0.03] blur-3xl" />
-        </div>
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <motion.div {...fadeIn}>
-            <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6">
-              Ready to build your content engine?
+      {/* ── CTA ── */}
+      <section style={{ background: ORANGE, padding: "120px 24px", textAlign: "center" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <motion.div {...fadeUp}>
+            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(48px, 7vw, 80px)", color: BLACK, lineHeight: 1.02, letterSpacing: "1px", marginBottom: "20px" }}>
+              Ready to build your marketing engine?
             </h2>
-            <p className="text-xl text-foreground/45 mb-4 max-w-xl mx-auto leading-relaxed">
-              Book a free 20-minute strategy call. We'll map out a publishing plan for your channel — no pressure, no pitch deck.
+            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: BLACK, marginBottom: "48px", lineHeight: 1.6, opacity: 0.75 }}>
+              Book a free 20-minute audit call. No pitch, no pressure — just honest feedback.
             </p>
-            <p className="text-foreground/30 text-sm mb-10">Trusted by coaches, consultants, and founders worldwide.</p>
             <a
               href={CALENDLY}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-10 py-4 bg-foreground text-background font-semibold rounded-xl hover:opacity-90 transition-opacity text-base"
+              style={{ background: BLACK, color: OFF_WHITE, fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", letterSpacing: "1px", padding: "18px 64px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
             >
-              Book a 20-min strategy call <ArrowRight className="w-4 h-4" />
+              Book Free Audit
             </a>
           </motion.div>
         </div>
       </section>
 
       <Footer />
-      <ContactModal open={contactOpen} onOpenChange={setContactOpen} />
     </div>
   );
 }
