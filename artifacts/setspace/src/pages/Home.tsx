@@ -123,7 +123,7 @@ export default function Home() {
   }, []);
 
   const portfolioItems = [
-    { id: 1,  title: "Finance Talking Head",       client: "Finance Creator",         type: "Talking Head",    category: "YouTube", videoId: "kvbTfcAIymU" },
+    { id: 1,  title: "Wellness Brand Video",         client: "Wellness Coach",          type: "Talking Head",    category: "YouTube", videoId: "kvbTfcAIymU" },
     { id: 2,  title: "YouTube Long-Form Edit",      client: "Unexpected Atlanta Tours", type: "Long Form",       category: "YouTube", videoId: "VysdDxP_oPo" },
     { id: 3,  title: "Testimonials Compilation",    client: "Iron Master Awards",      type: "Testimonials",    category: "YouTube", videoId: "bWmb_8dzgTk" },
     { id: 4,  title: "Promotional Video",           client: "Kyle",                    type: "Promo Video",     category: "YouTube", videoId: "HBejF0eQ2TA" },
@@ -138,10 +138,10 @@ export default function Home() {
     { id: 13, title: "Meta Ad Creative",            client: "Flagship Media",          type: "Meta Ad",         category: "Ads",     videoId: "4louAvpt_W0" },
     { id: 14, title: "AI Brand Video",              client: "Setspace",                type: "AI Generated",    category: "AI",      videoId: "kQJRCMOGjvA" },
     { id: 15, title: "AI Product Showcase",         client: "Tech Brand",              type: "AI Showcase",     category: "AI",      videoId: "NWxk_O1Zf6Q" },
-    { id: 16, title: "AI Cinematic Edit",           client: "Creative Studio",         type: "AI Cinematic",    category: "AI",      videoId: "K3DznIcAKMo" },
+    { id: 16, title: "AI Brand Edit",               client: "Creative Studio",         type: "AI Edit",         category: "AI",      videoId: "K3DznIcAKMo" },
     { id: 17, title: "Motion Graphics Package",     client: "SBD Canada",              type: "Motion Graphics", category: "AI",      videoId: "D7gJMWCYMqc" },
     { id: 18, title: "AI Talking Avatar",           client: "Brand",                   type: "AI Avatar",       category: "AI",      videoId: "fBfNpVJhBrE" },
-    { id: 19, title: "Finance Short Clip",          client: "Finance Expert",          type: "Talking Head",    category: "Reels",   videoId: "kvbTfcAIymU" },
+    { id: 19, title: "Brand Short Clip",            client: "Service Provider",        type: "Talking Head",    category: "Reels",   videoId: "kvbTfcAIymU" },
     { id: 20, title: "YouTube Channel Trailer",     client: "Creator",                 type: "Channel Trailer", category: "YouTube", videoId: "bWmb_8dzgTk" },
   ];
 
@@ -208,8 +208,8 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.15 }}
           >
-            We produce your content.<br />
-            <span className="text-gradient">You serve your clients.</span>
+            We build your marketing engine.<br />
+            <span className="text-gradient">You focus on your clients.</span>
           </motion.h1>
 
           <motion.p
@@ -218,7 +218,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.3 }}
           >
-            Video editing, reels, and design for coaches and service providers — delivered consistently every month, no hand-holding required.
+            Done-for-you content production and marketing for therapists, counselors, and wellness professionals — strategy, reels, landing pages, and email sequences, all handled for you.
           </motion.p>
 
           <motion.div
@@ -258,16 +258,16 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.85 }}
           >
             <div className="text-center">
-              <div className="text-3xl font-display font-bold"><CountUp to={300} suffix="+" /></div>
-              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Videos Delivered</div>
+              <div className="text-3xl font-display font-bold"><CountUp to={160} suffix="+" /></div>
+              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Clients Helped</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-display font-bold"><CountUp to={100} suffix="+" /></div>
-              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Happy Clients</div>
+              <div className="text-3xl font-display font-bold"><CountUp to={1000} suffix="+" /></div>
+              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Content Pieces Produced</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-display font-bold"><CountUpFloat to={4.9} suffix="★" duration={2400} /></div>
-              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Average Rating</div>
+              <div className="text-3xl font-display font-bold">3 Years</div>
+              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">In Production</div>
             </div>
           </motion.div>
         </div>
@@ -414,8 +414,8 @@ export default function Home() {
             {[
               {
                 icon: <Youtube className="w-7 h-7 mb-5 text-foreground/70" />,
-                title: "YouTube Long-Form Editing",
-                desc: "Professional talking-head editing for coaches and consultants — jump cuts, B-roll, captions, pacing, and retention hooks baked in.",
+                title: "Long-Form Video Editing",
+                desc: "Professional talking-head editing for therapists, coaches, and consultants — jump cuts, B-roll, captions, pacing, and retention hooks baked in.",
                 tags: ["72h delivery", "3 revisions", "16:9 optimised"],
               },
               {
@@ -749,18 +749,18 @@ export default function Home() {
 
             <div className="space-y-6">
               <p className="text-foreground/65 text-lg leading-relaxed">
-                SetSpace is a remote content production agency. We handle video editing, reels, graphic design, and social media content for coaches, consultants, and service providers who need consistent output without managing an in-house team.
+                SetSpace is a remote content and marketing agency helping therapists, counselors, and wellness professionals grow online. We handle strategy, video editing, reels, landing pages, and email nurture sequences — so you can focus on your clients.
               </p>
               <p className="text-foreground/50 leading-relaxed">
                 I work closely with every client from brief to final file. No hand-offs, no surprises. You get direct communication, fast turnarounds, and content that reflects your brand.
               </p>
               <p className="text-foreground/50 leading-relaxed">
-                3 years in. 300+ videos delivered. 4.9★ across 100+ projects.
+                3 years in. 160+ clients helped. 1,000+ content pieces produced.
               </p>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 {[
-                  { value: "300+", label: "Videos Delivered" },
-                  { value: "100+", label: "Happy Clients" },
+                  { value: "160+", label: "Clients Helped" },
+                  { value: "1,000+", label: "Content Pieces Produced" },
                   { value: "4.9★", label: "Average Rating" },
                   { value: "48h", label: "Avg. Turnaround" },
                 ].map((fact, i) => (
@@ -869,7 +869,7 @@ export default function Home() {
             {[
               {
                 q: "What kinds of clients do you work with?",
-                a: "Coaches, consultants, service providers, and personal brands who need consistent video and social content without managing an in-house team. If you create knowledge-based content — whether on YouTube, LinkedIn, Instagram, or a podcast — we're a good fit.",
+                a: "Therapists, counselors, wellness coaches, and service-based professionals who need consistent content and marketing without managing an in-house team. If you want to grow online while focusing on your clients — we're a good fit.",
               },
               {
                 q: "Can you match my existing editing style?",
@@ -877,11 +877,11 @@ export default function Home() {
               },
               {
                 q: "What's the turnaround time?",
-                a: "Shorts and clips are delivered within 48 hours. Long-form YouTube edits within 72 hours. On the Authority plan, same-day delivery is available for urgent uploads.",
+                a: "Reels and short clips are delivered within 48 hours. Long-form video edits within 72 hours. On the Full Engine plan, same-day delivery is available for urgent content.",
               },
               {
                 q: "How does feedback and revisions work?",
-                a: "You review the edit and leave timestamped comments — we use a simple Google Drive or Frame.io link depending on your preference. We turn around revisions within 24 hours. Starter includes 3 revisions per video; Growth and Authority include unlimited.",
+                a: "You review the edit and leave timestamped comments — we use a simple Google Drive or Frame.io link depending on your preference. We turn around revisions within 24 hours. Starter includes 3 revisions per piece; Growth and Full Engine include unlimited.",
               },
               {
                 q: "What happens if I'm not happy?",
