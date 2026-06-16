@@ -209,8 +209,7 @@ export default function Home() {
             transition={{ duration: 0.9, delay: 0.15 }}
           >
             We produce your content.<br />
-            <span className="text-gradient">You serve</span><br />
-            your clients.
+            <span className="text-gradient">You serve your clients.</span>
           </motion.h1>
 
           <motion.p
@@ -249,7 +248,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9, delay: 0.6 }}
           >
-            Trusted by coaches, consultants, and founders. Top Rated Plus on Upwork. ~$100K delivered.
+            Trusted by coaches, consultants, and founders worldwide.
           </motion.p>
 
           <motion.div
@@ -269,10 +268,6 @@ export default function Home() {
             <div className="text-center">
               <div className="text-3xl font-display font-bold"><CountUpFloat to={4.9} suffix="★" duration={2400} /></div>
               <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Average Rating</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-display font-bold">~$100K</div>
-              <div className="text-xs text-foreground/45 mt-1 uppercase tracking-widest">Delivered on Upwork</div>
             </div>
           </motion.div>
         </div>
@@ -857,7 +852,7 @@ export default function Home() {
                 I work closely with every client from brief to final file. No hand-offs, no surprises. You get direct communication, fast turnarounds, and content that reflects your brand.
               </p>
               <p className="text-foreground/50 leading-relaxed">
-                3 years in. $100K+ delivered. Top Rated Plus on Upwork. 4.9★ across 100+ projects.
+                3 years in. 300+ videos delivered. 4.9★ across 100+ projects.
               </p>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 {[
@@ -1028,7 +1023,7 @@ export default function Home() {
             <p className="text-xl text-foreground/45 mb-4 max-w-xl mx-auto leading-relaxed">
               Book a free 20-minute strategy call. We'll map out a publishing plan for your channel — no pressure, no pitch deck.
             </p>
-            <p className="text-foreground/30 text-sm mb-10">Trusted by coaches, consultants, and founders. Top Rated Plus on Upwork. ~$100K delivered.</p>
+            <p className="text-foreground/30 text-sm mb-10">Trusted by coaches, consultants, and founders worldwide.</p>
             <a
               href={CALENDLY}
               target="_blank"
