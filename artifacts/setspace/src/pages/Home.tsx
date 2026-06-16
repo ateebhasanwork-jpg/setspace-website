@@ -117,36 +117,109 @@ export default function Home() {
       <Navbar />
 
       {/* ───────── HERO ───────── */}
-      <section style={{ background: WHITE, padding: "180px 24px 140px", textAlign: "center" }}>
-        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
-          <Label>Content &amp; Marketing Engine</Label>
+      <section style={{ background: WHITE, paddingTop: "140px" }}>
+        {/* 2-col: text left, mockups right */}
+        <div style={{ maxWidth: MAX_W, margin: "0 auto", padding: "40px 24px 80px" }}>
+          <div className="hero-grid">
 
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: "clamp(40px, 7.5vw, 88px)", lineHeight: 1.08, margin: "0 auto 32px", maxWidth: "900px" }}>
-            <span style={{ color: BLACK }}>We build your marketing engine.</span>
-            <br />
-            <span style={{ color: ORANGE }}>You focus on your clients.</span>
-          </h1>
+            {/* LEFT */}
+            <div className="hero-left">
+              <Label>Content &amp; Marketing Engine</Label>
 
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, maxWidth: "520px", margin: "0 auto 48px", lineHeight: 1.7 }}>
-            Done-for-you content and marketing for therapists, counselors, and wellness professionals.
-          </p>
+              <h1 style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: "clamp(40px, 6vw, 80px)", lineHeight: 1.08, margin: "0 0 32px" }}>
+                {["We", "build", "your", "marketing", "engine."].map((w, i) => (
+                  <span key={i} className="fade-word" style={{ animationDelay: `${i * 0.15}s`, color: BLACK }}>{w}{" "}</span>
+                ))}
+                <br />
+                {["You", "focus", "on", "your", "clients."].map((w, i) => (
+                  <span key={i} className="fade-word" style={{ animationDelay: `${(5 + i) * 0.15}s`, color: ORANGE }}>{w}{" "}</span>
+                ))}
+              </h1>
 
-          <a
-            href={CALENDLY}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "15px", background: BLACK, color: WHITE, padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = "0.82")}
-            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-          >
-            Get Free Audit
-          </a>
+              <p className="hero-sub-text" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, maxWidth: "480px", margin: "0 0 48px", lineHeight: 1.7 }}>
+                Done-for-you content and marketing for therapists, counselors, and wellness professionals.
+              </p>
 
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY, marginTop: "20px" }}>
-            No pitch. No pressure. Just honest feedback.
-          </p>
+              <div className="hero-cta-row" style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+                <a
+                  href={CALENDLY}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "15px", background: BLACK, color: WHITE, padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = "0.82")}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+                >
+                  Get Free Audit
+                </a>
+              </div>
 
-          <div style={{ width: "100%", height: "1px", background: BLACK, marginTop: "80px" }} />
+              <p className="hero-no-pitch" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY, textAlign: "center" }}>
+                No pitch. No pressure. Just honest feedback.
+              </p>
+            </div>
+
+            {/* RIGHT — floating mockups (desktop only via CSS) */}
+            <div className="hero-mockups" aria-hidden="true">
+              <div style={{ position: "relative", height: "480px", width: "100%" }}>
+                {/* Frame A — back-left */}
+                <div
+                  className="mockup-float-a"
+                  style={{ position: "absolute", top: "30px", left: "0px", width: "180px", height: "310px", border: `1px solid ${DIVIDER}`, background: ORANGE, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1 }}
+                >
+                  <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Play style={{ width: "16px", height: "16px", color: WHITE, marginLeft: "3px" }} fill={WHITE} />
+                  </div>
+                </div>
+                {/* Frame B — center */}
+                <div
+                  className="mockup-float-b"
+                  style={{ position: "absolute", top: "80px", left: "100px", width: "190px", height: "330px", border: `1px solid ${DIVIDER}`, background: "#1A1A1A", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}
+                >
+                  <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "rgba(232,75,26,0.3)", border: "1px solid rgba(232,75,26,0.6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Play style={{ width: "16px", height: "16px", color: ORANGE, marginLeft: "3px" }} fill={ORANGE} />
+                  </div>
+                </div>
+                {/* Frame C — front-right */}
+                <div
+                  className="mockup-float-c"
+                  style={{ position: "absolute", top: "140px", left: "200px", width: "175px", height: "300px", border: `1px solid ${DIVIDER}`, background: ORANGE, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 3 }}
+                >
+                  <div style={{ width: "44px", height: "44px", borderRadius: "50%", background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Play style={{ width: "16px", height: "16px", color: WHITE, marginLeft: "3px" }} fill={WHITE} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* STATS BAR */}
+        <div style={{ background: WHITE, borderTop: `1px solid ${DIVIDER}`, borderBottom: `1px solid ${DIVIDER}`, padding: "16px 24px" }}>
+          <div style={{ maxWidth: MAX_W, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", gap: "40px", flexWrap: "wrap" }}>
+            {["160+ Clients", "1,000+ Content Pieces", "3 Years In Production"].map((s, i) => (
+              <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY }}>
+                {i > 0 && <span style={{ marginRight: "40px", color: DIVIDER }}>·</span>}
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* MARQUEE TICKER */}
+        <div style={{ background: BLACK, padding: "16px 0", overflow: "hidden" }}>
+          <div className="ticker-track">
+            {[0, 1].map(rep => (
+              <span key={rep} style={{ display: "flex", alignItems: "center", gap: "0", whiteSpace: "nowrap" }}>
+                {["Video Editing", "Instagram Reels", "Content Strategy", "Landing Pages", "Email Sequences", "Short-Form Content", "Wellness Marketing", "Done For You"].map((item, i) => (
+                  <span key={i} style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "13px", textTransform: "uppercase", letterSpacing: "2px", color: "#F5F0EB", padding: "0 32px" }}>
+                    {item}
+                    <span style={{ marginLeft: "32px", color: ORANGE }}>·</span>
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
