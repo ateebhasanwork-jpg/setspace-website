@@ -2,54 +2,56 @@ import { useState, useEffect, useRef } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Play, Check } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-const ORANGE = "#E84B1A";
-const BLACK = "#0A0A0A";
-const CHARCOAL = "#1A1A1A";
-const OFF_WHITE = "#F5F0EB";
-const GRAY = "#888888";
-const BORDER = "#2A2A2A";
+const WHITE   = "#FFFFFF";
+const WARM    = "#F7F5F2";
+const BLACK   = "#0A0A0A";
+const DARK    = "#0A0A0A";
+const ORANGE  = "#E84B1A";
+const GRAY    = "#777777";
+const GRAY2   = "#888888";
+const DIVIDER = "#E8E8E8";
+const DIVIDER2 = "#2A2A2A";
 const CALENDLY = "https://calendly.com/ateebhasan-work/new-meeting";
 
-function CountUp({ to, suffix = "", duration = 2400, delay = 400 }: { to: number; suffix?: string; duration?: number; delay?: number }) {
-  const [value, setValue] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
+const SEC_PAD = "140px 24px";
+const SEC_PAD_M = "80px 24px";
+const MAX_W = "1140px";
+
+function useInView(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    started.current = false;
-    setValue(0);
-    const el = ref.current;
-    if (!el) return;
-    let raf: number;
-    let timeout: ReturnType<typeof setTimeout>;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !started.current) {
-        started.current = true;
-        timeout = setTimeout(() => {
-          const start = performance.now();
-          const tick = (now: number) => {
-            const p = Math.min((now - start) / duration, 1);
-            const ease = 1 - Math.pow(1 - p, 3);
-            setValue(Math.round(ease * to));
-            if (p < 1) raf = requestAnimationFrame(tick);
-          };
-          raf = requestAnimationFrame(tick);
-        }, delay);
-      }
-    }, { threshold: 0.2 });
-    observer.observe(el);
-    return () => { observer.disconnect(); cancelAnimationFrame(raf); clearTimeout(timeout); };
-  }, [to, duration, delay]);
-  return <span ref={ref}>{value.toLocaleString()}{suffix}</span>;
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold }
+    );
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, visible };
 }
 
-const fadeUp = {
-  initial: { opacity: 0, y: 32 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-60px" },
-  transition: { duration: 0.6, ease: "easeOut" },
-};
+function CountUp({ to, suffix = "", duration = 2000 }: { to: number; suffix?: string; duration?: number }) {
+  const [val, setVal] = useState(0);
+  const { ref, visible } = useInView(0.2);
+  const started = useRef(false);
+  useEffect(() => {
+    if (!visible || started.current) return;
+    started.current = true;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(ease * to));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [visible, to, duration]);
+  return <span ref={ref}>{val.toLocaleString()}{suffix}</span>;
+}
 
 const portfolioItems = [
   { id: 1,  title: "Wellness Brand Video",         client: "Wellness Coach",           type: "Talking Head",    category: "YouTube", videoId: "kvbTfcAIymU" },
@@ -74,271 +76,262 @@ const portfolioItems = [
   { id: 20, title: "YouTube Channel Trailer",       client: "Creator",                  type: "Channel Trailer", category: "YouTube", videoId: "bWmb_8dzgTk" },
 ];
 
-const portfolioCategories = ["All", "YouTube", "Reels", "Ads", "AI"];
+const CATEGORIES = ["All", "YouTube", "Reels", "Ads", "AI"];
+
+const teamMembers = [
+  { name: "Zoha Adnan",      role: "Lead Gen Executive",          img: "zoha.jpeg" },
+  { name: "Jaffer Naqvi",    role: "Video Designer",              img: "jaffer.jpeg" },
+  { name: "Sani e Zehra",    role: "Social Media Designer",       img: "sani.jpeg" },
+  { name: "Muhammad Ashhad", role: "Video Editor",                img: "ashad.jpeg" },
+  { name: "Laiba Malik",     role: "HR & Ops Executive",          img: "laiba.jpeg" },
+  { name: "Zayd Saleem",     role: "Explainer Video Specialist",  img: "zayd.jpeg" },
+  { name: "Abdullah Khan",   role: "Motion Graphics Specialist",  img: "abdullah.jpeg" },
+];
+
+function Label({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, fontSize: "11px", textTransform: "uppercase", letterSpacing: "3px", color: ORANGE, marginBottom: "24px" }}>
+      {children}
+    </div>
+  );
+}
+
+function SectionHeadline({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "clamp(28px, 4vw, 48px)", color: BLACK, lineHeight: 1.15, margin: "0 0 24px", ...style }}>
+      {children}
+    </h2>
+  );
+}
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("All");
-  const [hoveredItem, setHoveredItem] = useState<typeof portfolioItems[0] | null>(null);
+  const [hovered, setHovered] = useState<typeof portfolioItems[0] | null>(null);
   const [activeVideo, setActiveVideo] = useState<{ videoId: string; title: string } | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const filteredPortfolio = activeTab === "All"
-    ? portfolioItems
-    : portfolioItems.filter(p => p.category === activeTab);
-
-  const teamMembers = [
-    { name: "Zoha Adnan",      role: "Lead Gen Executive",          img: "zoha.jpeg" },
-    { name: "Jaffer Naqvi",    role: "Video Designer",              img: "jaffer.jpeg" },
-    { name: "Sani e Zehra",    role: "Social Media Designer",       img: "sani.jpeg" },
-    { name: "Muhammad Ashhad", role: "Video Editor",                img: "ashad.jpeg" },
-    { name: "Laiba Malik",     role: "HR & Ops Executive",          img: "laiba.jpeg" },
-    { name: "Zayd Saleem",     role: "Explainer Video Specialist",  img: "zayd.jpeg" },
-    { name: "Abdullah Khan",   role: "Motion Graphics Specialist",  img: "abdullah.jpeg" },
-  ];
+  const filtered = activeTab === "All" ? portfolioItems : portfolioItems.filter(p => p.category === activeTab);
 
   return (
-    <div style={{ background: BLACK, color: OFF_WHITE, fontFamily: "'Inter', sans-serif", overflowX: "hidden" }}>
+    <div style={{ background: WHITE, color: BLACK, fontFamily: "'DM Sans', sans-serif", overflowX: "hidden" }}>
       <Navbar />
 
-      {/* ── HERO ── */}
-      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: BLACK, paddingTop: "80px", position: "relative" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", textAlign: "center", width: "100%" }}>
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <div style={{ color: ORANGE, fontSize: "11px", fontFamily: "'Inter', sans-serif", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "28px", fontWeight: 600 }}>
-              Content &amp; Marketing Engine
-            </div>
-            <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(52px, 8vw, 96px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", marginBottom: "28px", margin: "0 0 28px" }}>
-              We build your<br />marketing engine.<br />
-              <span style={{ color: ORANGE }}>You focus on your clients.</span>
-            </h1>
-            <p style={{ fontSize: "18px", color: GRAY, maxWidth: "620px", margin: "0 auto 44px", lineHeight: 1.75, fontWeight: 400 }}>
-              Done-for-you content production and marketing for therapists, counselors, and wellness professionals — strategy, reels, landing pages, and email sequences, all handled for you.
-            </p>
-            <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}>
-              <a
-                href={CALENDLY}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ background: ORANGE, color: BLACK, fontFamily: "'Bebas Neue', sans-serif", fontSize: "20px", letterSpacing: "1px", padding: "16px 48px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.88")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-              >
-                Get Free Audit
-              </a>
-              <button
-                onClick={() => document.querySelector("#work")?.scrollIntoView({ behavior: "smooth" })}
-                style={{ background: "transparent", color: ORANGE, border: `1px solid ${ORANGE}`, fontFamily: "'Bebas Neue', sans-serif", fontSize: "20px", letterSpacing: "1px", padding: "16px 48px", cursor: "pointer", transition: "all 0.2s" }}
-                onMouseEnter={e => { e.currentTarget.style.background = ORANGE; e.currentTarget.style.color = BLACK; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = ORANGE; }}
-              >
-                See Our Work
-              </button>
-            </div>
-          </motion.div>
+      {/* ───────── HERO ───────── */}
+      <section style={{ background: WHITE, padding: "180px 24px 140px", textAlign: "center" }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          <Label>Content &amp; Marketing Engine</Label>
+
+          <h1 style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: "clamp(40px, 7.5vw, 88px)", lineHeight: 1.08, margin: "0 auto 32px", maxWidth: "900px" }}>
+            <span style={{ color: BLACK }}>We build your marketing engine.</span>
+            <br />
+            <span style={{ color: ORANGE }}>You focus on your clients.</span>
+          </h1>
+
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, maxWidth: "520px", margin: "0 auto 48px", lineHeight: 1.7 }}>
+            Done-for-you content and marketing for therapists, counselors, and wellness professionals.
+          </p>
+
+          <a
+            href={CALENDLY}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "15px", background: BLACK, color: WHITE, padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.82")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+          >
+            Get Free Audit
+          </a>
+
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY, marginTop: "20px" }}>
+            No pitch. No pressure. Just honest feedback.
+          </p>
+
+          <div style={{ width: "100%", height: "1px", background: BLACK, marginTop: "80px" }} />
         </div>
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "1px", background: ORANGE }} />
       </section>
 
-      {/* ── STATS ── */}
-      <section style={{ background: ORANGE, padding: "80px 24px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0", textAlign: "center" }}>
+      {/* ───────── STATS ───────── */}
+      <section style={{ background: DARK, padding: "80px 24px" }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0" }}>
           {[
             { num: 160, suffix: "+", label: "Clients Helped" },
             { num: 1000, suffix: "+", label: "Content Pieces Produced" },
             { num: 3, suffix: " Years", label: "In Production" },
-          ].map((stat, i) => (
-            <motion.div
+          ].map((s, i) => (
+            <div
               key={i}
-              {...fadeUp}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              style={{ padding: "0 24px", borderRight: i < 2 ? `1px solid rgba(0,0,0,0.15)` : "none" }}
+              style={{ textAlign: "center", padding: "0 32px", borderRight: i < 2 ? `1px solid ${DIVIDER2}` : "none" }}
             >
-              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(48px, 7vw, 72px)", color: BLACK, lineHeight: 1, letterSpacing: "1px" }}>
-                <CountUp to={stat.num} suffix={stat.suffix} />
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "clamp(36px, 5vw, 56px)", color: WHITE, lineHeight: 1 }}>
+                <CountUp to={s.num} suffix={s.suffix} />
               </div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: BLACK, marginTop: "8px", fontWeight: 500 }}>
-                {stat.label}
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: GRAY2, marginTop: "10px" }}>
+                {s.label}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* ── WHAT WE DO ── */}
-      <section id="services" style={{ background: CHARCOAL, padding: "120px 24px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <motion.div {...fadeUp} style={{ marginBottom: "64px" }}>
-            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>What We Do</div>
-            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
-              Everything you need to grow online
-            </h2>
-          </motion.div>
+      {/* ───────── WHAT WE DO ───────── */}
+      <section id="services" style={{ background: WARM, padding: SEC_PAD }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          <Label>What We Do</Label>
+          <SectionHeadline style={{ maxWidth: "600px" }}>Everything you need to grow online</SectionHeadline>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "2px" }} className="grid-cols-1 md:grid-cols-2">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0", marginTop: "64px" }}>
             {[
-              { num: "01", title: "Content Production", desc: "Video editing, reels, and short-form content delivered every month — consistently and on-brand, without you lifting a finger in post." },
-              { num: "02", title: "Landing Pages", desc: "High-converting pages designed and built for your practice. Capture leads, book sessions, and grow your email list on autopilot." },
-              { num: "03", title: "Email Nurture Sequences", desc: "Automated email flows that turn leads into booked sessions. Written, designed, and delivered — ready to connect with your list." },
-              { num: "04", title: "Content Strategy", desc: "A clear plan for what to post, when, and why. Built around your niche, your audience, and your goals — updated monthly." },
-            ].map((service, i) => (
-              <motion.div
-                key={i}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                style={{ background: BLACK, borderTop: `3px solid ${ORANGE}`, padding: "48px 40px", cursor: "default" }}
-              >
-                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "48px", color: ORANGE, lineHeight: 1, marginBottom: "20px", letterSpacing: "1px" }}>
-                  {service.num}
-                </div>
-                <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "28px", color: OFF_WHITE, letterSpacing: "0.5px", marginBottom: "16px", margin: "0 0 16px" }}>
-                  {service.title}
-                </h3>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
-                  {service.desc}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── WHO WE HELP ── */}
-      <section style={{ background: BLACK, padding: "120px 24px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <motion.div {...fadeUp} style={{ marginBottom: "72px" }}>
-            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>Who We Help</div>
-            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
-              Built for wellness professionals
-            </h2>
-          </motion.div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2px" }} className="grid-cols-1 md:grid-cols-3">
-            {[
-              { title: "Therapists & Counselors", desc: "Build trust online, attract ideal clients, and stay consistent without adding hours to your week." },
-              { title: "Wellness Coaches", desc: "Turn your expertise into compelling content that grows your audience and fills your calendar with qualified leads." },
-              { title: "Mental Health Practitioners", desc: "Grow your practice with professional content that reflects the care and quality you bring to every session." },
+              { num: "01", title: "Content Production", desc: "Video editing, reels, and short-form content delivered every month — consistently and on-brand." },
+              { num: "02", title: "Landing Pages", desc: "High-converting pages designed and built for your practice to capture leads and book sessions." },
+              { num: "03", title: "Email Nurture Sequences", desc: "Automated email flows that turn leads into booked sessions — written, designed, and delivered." },
+              { num: "04", title: "Content Strategy", desc: "A clear monthly plan for what to post, when, and why — built around your niche and goals." },
             ].map((item, i) => (
-              <motion.div
+              <div
                 key={i}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                style={{ borderTop: `1px solid ${BORDER}`, paddingTop: "40px", paddingRight: "40px" }}
+                style={{ borderTop: `1px solid ${DIVIDER}`, padding: "40px 40px 40px 0", paddingRight: i % 2 === 0 ? "56px" : "0", paddingLeft: i % 2 === 1 ? "56px" : "0" }}
               >
-                <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "26px", color: OFF_WHITE, letterSpacing: "0.5px", marginBottom: "16px", margin: "0 0 16px" }}>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "13px", textTransform: "uppercase", letterSpacing: "2px", color: ORANGE }}>
+                  {item.num}
+                </div>
+                <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "20px", color: BLACK, margin: "16px 0 8px" }}>
                   {item.title}
                 </h3>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
                   {item.desc}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── PORTFOLIO ── */}
-      <section id="work" style={{ background: CHARCOAL, padding: "120px 24px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <motion.div {...fadeUp} style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "32px", marginBottom: "56px" }}>
+      {/* ───────── WHO WE HELP ───────── */}
+      <section style={{ background: WHITE, padding: SEC_PAD }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          <Label>Who We Help</Label>
+          <SectionHeadline>Built for wellness professionals</SectionHeadline>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "0", marginTop: "64px" }}>
+            {[
+              { title: "Therapists & Counselors", desc: "Build trust online, attract ideal clients, and stay consistent without adding hours to your week." },
+              { title: "Wellness Coaches", desc: "Turn your expertise into compelling content that grows your audience and fills your calendar." },
+              { title: "Mental Health Practitioners", desc: "Grow your practice with content that reflects the care and quality you bring to every session." },
+            ].map((col, i) => (
+              <div
+                key={i}
+                style={{ borderLeft: i > 0 ? `1px solid ${DIVIDER}` : "none", paddingLeft: i > 0 ? "48px" : "0", paddingRight: "48px" }}
+              >
+                <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: BLACK, marginBottom: "16px" }}>
+                  {col.title}
+                </h3>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: GRAY, lineHeight: 1.7, margin: 0 }}>
+                  {col.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── PORTFOLIO ───────── */}
+      <section id="work" style={{ background: WARM, padding: SEC_PAD }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "32px", marginBottom: "56px" }}>
             <div>
-              <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>Selected Work</div>
-              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
-                Proof of performance.
-              </h2>
+              <Label>Selected Work</Label>
+              <SectionHeadline style={{ margin: 0 }}>Proof of performance.</SectionHeadline>
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {portfolioCategories.map(cat => (
+              {CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveTab(cat)}
                   style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: "12px",
+                    fontFamily: "'DM Sans', sans-serif",
                     fontWeight: 600,
+                    fontSize: "12px",
                     letterSpacing: "1px",
                     textTransform: "uppercase",
-                    padding: "8px 20px",
-                    background: activeTab === cat ? ORANGE : "transparent",
-                    color: activeTab === cat ? BLACK : GRAY,
-                    border: `1px solid ${activeTab === cat ? ORANGE : BORDER}`,
+                    padding: "8px 18px",
+                    background: activeTab === cat ? BLACK : WHITE,
+                    color: activeTab === cat ? WHITE : GRAY,
+                    border: `1px solid ${activeTab === cat ? BLACK : DIVIDER}`,
                     cursor: "pointer",
-                    transition: "all 0.2s",
+                    transition: "all 0.18s",
                   }}
                 >
                   {cat}
                 </button>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "24px" }} className="lg:grid-cols-[3fr_2fr]">
+          <div style={{ display: "grid", gridTemplateColumns: "3fr 2fr", gap: "48px", alignItems: "start" }}>
             <div>
-              <div style={{ borderTop: `1px solid ${BORDER}`, maxHeight: "520px", overflowY: "auto", scrollbarWidth: "thin", scrollbarColor: `${BORDER} transparent` }}>
-                {filteredPortfolio.map((item, i) => (
-                  <motion.div
+              <div style={{ borderTop: `1px solid ${DIVIDER}`, maxHeight: "520px", overflowY: "auto" }} className="hide-scrollbar">
+                {filtered.map((item, i) => (
+                  <div
                     key={item.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25, delay: i * 0.025 }}
-                    onMouseEnter={() => setHoveredItem(item)}
-                    onMouseLeave={() => setHoveredItem(null)}
+                    onMouseEnter={() => setHovered(item)}
+                    onMouseLeave={() => setHovered(null)}
                     onClick={() => setActiveVideo({ videoId: item.videoId, title: item.title })}
-                    style={{ display: "flex", alignItems: "center", gap: "20px", padding: "18px 0", borderBottom: `1px solid ${BORDER}`, cursor: "pointer" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "20px",
+                      padding: "18px 0",
+                      borderBottom: `1px solid ${DIVIDER}`,
+                      cursor: "pointer",
+                      background: hovered?.id === item.id ? WARM : "transparent",
+                      transition: "background 0.15s",
+                    }}
                   >
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: BORDER, width: "28px", flexShrink: 0, fontWeight: 600 }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: DIVIDER, width: "28px", flexShrink: 0, fontWeight: 600 }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", fontWeight: 600, color: OFF_WHITE, lineHeight: 1.3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", fontWeight: 600, color: BLACK, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {item.title}
                       </div>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "12px", color: GRAY, marginTop: "2px" }}>{item.client}</div>
+                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: GRAY, marginTop: "2px" }}>{item.client}</div>
                     </div>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: GRAY, flexShrink: 0, display: "none" }} className="hidden md:block">
-                      {item.type}
-                    </span>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 600, letterSpacing: "1px", textTransform: "uppercase", padding: "4px 10px", border: `1px solid ${BORDER}`, color: GRAY, flexShrink: 0 }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "1px", textTransform: "uppercase", padding: "4px 10px", border: `1px solid ${DIVIDER}`, color: GRAY, flexShrink: 0 }}>
                       {item.category}
                     </span>
-                    <div style={{ width: "32px", height: "32px", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: hoveredItem?.id === item.id ? ORANGE : "transparent", transition: "background 0.2s" }}>
-                      <Play style={{ width: "12px", height: "12px", color: hoveredItem?.id === item.id ? BLACK : OFF_WHITE, marginLeft: "2px" }} />
+                    <div style={{ width: "32px", height: "32px", border: `1px solid ${DIVIDER}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: hovered?.id === item.id ? BLACK : "transparent", transition: "background 0.18s" }}>
+                      <Play style={{ width: "11px", height: "11px", color: hovered?.id === item.id ? WHITE : GRAY, marginLeft: "2px" }} />
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            <div className="hidden lg:block" style={{ position: "sticky", top: "88px" }}>
-              <div style={{ aspectRatio: "16/9", background: BLACK, border: `1px solid ${BORDER}`, overflow: "hidden", position: "relative" }}>
-                {hoveredItem ? (
+            <div style={{ position: "sticky", top: "88px" }}>
+              <div style={{ aspectRatio: "16/9", background: WARM, border: `1px solid ${DIVIDER}`, overflow: "hidden", position: "relative" }}>
+                {hovered ? (
                   <>
-                    <motion.img
-                      key={hoveredItem.videoId}
-                      initial={{ opacity: 0, scale: 1.04 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                      src={`https://img.youtube.com/vi/${hoveredItem.videoId}/maxresdefault.jpg`}
-                      onError={e => { (e.currentTarget as HTMLImageElement).src = `https://img.youtube.com/vi/${hoveredItem.videoId}/hqdefault.jpg`; }}
-                      alt={hoveredItem.title}
+                    <img
+                      key={hovered.videoId}
+                      src={`https://img.youtube.com/vi/${hovered.videoId}/maxresdefault.jpg`}
+                      onError={e => { (e.currentTarget as HTMLImageElement).src = `https://img.youtube.com/vi/${hovered.videoId}/hqdefault.jpg`; }}
+                      alt={hovered.title}
                       style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                     />
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%)" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 60%)" }} />
                     <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "20px" }}>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", color: ORANGE, marginBottom: "4px" }}>{hoveredItem.client}</div>
-                      <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", color: OFF_WHITE, letterSpacing: "0.5px" }}>{hoveredItem.title}</div>
+                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "10px", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", color: ORANGE, marginBottom: "4px" }}>{hovered.client}</div>
+                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", fontWeight: 700, color: WHITE }}>{hovered.title}</div>
                     </div>
                     <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>
-                      <div style={{ width: "56px", height: "56px", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <Play style={{ width: "20px", height: "20px", color: "white", marginLeft: "3px" }} fill="white" />
+                      <div style={{ width: "52px", height: "52px", background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <Play style={{ width: "18px", height: "18px", color: WHITE, marginLeft: "3px" }} fill={WHITE} />
                       </div>
                     </div>
                   </>
                 ) : (
                   <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", color: GRAY }}>
-                    <div style={{ width: "44px", height: "44px", border: `1px solid ${BORDER}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Play style={{ width: "16px", height: "16px", color: GRAY, marginLeft: "2px" }} />
-                    </div>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>Hover to preview</span>
+                    <Play style={{ width: "20px", height: "20px", color: GRAY }} />
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>Hover to preview</span>
                   </div>
                 )}
               </div>
@@ -355,20 +348,20 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setActiveVideo(null)}
-            style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(0,0,0,0.94)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
+            style={{ position: "fixed", inset: 0, zIndex: 50, background: "rgba(0,0,0,0.92)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}
           >
             <motion.div
-              initial={{ scale: 0.96 }}
+              initial={{ scale: 0.97 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.96 }}
+              exit={{ scale: 0.97 }}
               onClick={e => e.stopPropagation()}
-              style={{ width: "100%", maxWidth: "900px" }}
+              style={{ width: "100%", maxWidth: "880px" }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", padding: "0 4px" }}>
-                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", color: OFF_WHITE, letterSpacing: "0.5px" }}>{activeVideo.title}</span>
-                <button onClick={() => setActiveVideo(null)} style={{ fontFamily: "'Inter', sans-serif", fontSize: "28px", color: GRAY, background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}>×</button>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: WHITE }}>{activeVideo.title}</span>
+                <button onClick={() => setActiveVideo(null)} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "28px", color: GRAY, background: "none", border: "none", cursor: "pointer", lineHeight: 1 }}>×</button>
               </div>
-              <div style={{ position: "relative", aspectRatio: "16/9", background: BLACK }}>
+              <div style={{ position: "relative", aspectRatio: "16/9" }}>
                 <iframe
                   src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1&rel=0`}
                   title={activeVideo.title}
@@ -382,81 +375,69 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* ── PACKAGES ── */}
-      <section id="pricing" style={{ background: CHARCOAL, padding: "120px 24px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <motion.div {...fadeUp} style={{ textAlign: "center", marginBottom: "72px" }}>
-            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>Pricing</div>
-            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 64px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: "0 0 16px" }}>
-              Simple, transparent packages
-            </h2>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "16px", color: GRAY, margin: 0 }}>
-              No hidden fees. No lock-in contracts. Start this month.
+      {/* ───────── PACKAGES ───────── */}
+      <section id="pricing" style={{ background: WARM, padding: SEC_PAD }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "72px" }}>
+            <Label>Pricing</Label>
+            <SectionHeadline>Simple, transparent packages</SectionHeadline>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, margin: 0 }}>
+              No hidden fees. No long-term lock-ins.
             </p>
-          </motion.div>
+          </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2px", alignItems: "start" }} className="grid-cols-1 md:grid-cols-3">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "24px", alignItems: "start" }}>
             {[
               {
-                name: "Starter",
-                price: "$800",
-                period: "/mo",
+                name: "Starter", price: "$800", period: "/mo",
                 desc: "For wellness professionals getting started with consistent content.",
                 features: ["8 reels / month", "Content strategy", "Basic social media management"],
-                highlight: false,
+                dark: false,
               },
               {
-                name: "Growth",
-                price: "$1,500",
-                period: "/mo",
+                name: "Growth", price: "$1,500", period: "/mo",
                 desc: "For growing practices ready to expand content and capture leads.",
                 features: ["12 reels + 6 designs / month", "Content strategy", "Landing page (one-time setup)", "Email nurture sequence (3 emails)"],
-                highlight: true,
+                dark: true, popular: true,
               },
               {
-                name: "Full Engine",
-                price: "$2,500",
-                period: "/mo",
+                name: "Full Engine", price: "$2,500", period: "/mo",
                 desc: "A complete done-for-you content and marketing operation.",
-                features: ["Full content production (reels, designs, video)", "Strategy + landing page", "Full email nurture sequence", "Monthly performance review"],
-                highlight: false,
+                features: ["Full content production", "Strategy + landing page", "Full email nurture sequence", "Monthly performance review"],
+                dark: false,
               },
             ].map((plan, i) => (
-              <motion.div
+              <div
                 key={i}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
                 style={{
-                  background: BLACK,
-                  padding: "48px 40px",
-                  borderTop: plan.highlight ? `3px solid ${ORANGE}` : `3px solid ${BORDER}`,
-                  borderLeft: plan.highlight ? `1px solid ${ORANGE}` : "none",
-                  borderRight: plan.highlight ? `1px solid ${ORANGE}` : "none",
-                  borderBottom: plan.highlight ? `1px solid ${ORANGE}` : "none",
+                  background: plan.dark ? BLACK : WHITE,
+                  border: `1px solid ${plan.dark ? BLACK : DIVIDER}`,
+                  padding: "40px",
                   position: "relative",
-                  marginTop: plan.highlight ? "-8px" : "0",
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
-                {plan.highlight && (
-                  <div style={{ position: "absolute", top: "-1px", left: "40px", background: ORANGE, color: BLACK, fontFamily: "'Bebas Neue', sans-serif", fontSize: "13px", letterSpacing: "1px", padding: "4px 14px" }}>
+                {plan.popular && (
+                  <div style={{ position: "absolute", top: "0", left: "40px", background: ORANGE, color: WHITE, fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "11px", padding: "4px 12px", transform: "translateY(-100%)" }}>
                     Most Popular
                   </div>
                 )}
                 <div style={{ marginBottom: "32px" }}>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase", color: GRAY, marginBottom: "16px" }}>{plan.name}</div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: "6px", marginBottom: "12px" }}>
-                    <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "48px", color: OFF_WHITE, lineHeight: 1, letterSpacing: "1px" }}>{plan.price}</span>
-                    <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: GRAY }}>{plan.period}</span>
+                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "11px", textTransform: "uppercase", letterSpacing: "2px", color: plan.dark ? GRAY2 : GRAY, marginBottom: "20px" }}>
+                    {plan.name}
                   </div>
-                  <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: GRAY, lineHeight: 1.6, margin: 0 }}>{plan.desc}</p>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginBottom: "14px" }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "48px", color: plan.dark ? WHITE : BLACK, lineHeight: 1 }}>{plan.price}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: plan.dark ? GRAY2 : GRAY }}>{plan.period}</span>
+                  </div>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: plan.dark ? GRAY2 : GRAY, lineHeight: 1.6, margin: 0 }}>{plan.desc}</p>
                 </div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 40px", flex: 1 }}>
                   {plan.features.map((f, fi) => (
                     <li key={fi} style={{ display: "flex", alignItems: "flex-start", gap: "12px", marginBottom: "14px" }}>
-                      <Check style={{ width: "14px", height: "14px", color: ORANGE, marginTop: "2px", flexShrink: 0 }} />
-                      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: GRAY, lineHeight: 1.5 }}>{f}</span>
+                      <Check style={{ width: "14px", height: "14px", color: ORANGE, marginTop: "1px", flexShrink: 0 }} />
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: plan.dark ? GRAY2 : GRAY, lineHeight: 1.5 }}>{f}</span>
                     </li>
                   ))}
                 </ul>
@@ -464,156 +445,144 @@ export default function Home() {
                   href={CALENDLY}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ background: plan.highlight ? ORANGE : "transparent", color: plan.highlight ? BLACK : ORANGE, border: `1px solid ${plan.highlight ? ORANGE : BORDER}`, fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px", letterSpacing: "1px", padding: "14px 0", textDecoration: "none", textAlign: "center", display: "block", transition: "all 0.2s" }}
-                  onMouseEnter={e => { e.currentTarget.style.background = ORANGE; e.currentTarget.style.color = BLACK; e.currentTarget.style.borderColor = ORANGE; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = plan.highlight ? ORANGE : "transparent"; e.currentTarget.style.color = plan.highlight ? BLACK : ORANGE; e.currentTarget.style.borderColor = plan.highlight ? ORANGE : BORDER; }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 600,
+                    fontSize: "14px",
+                    background: plan.dark ? WHITE : "transparent",
+                    color: plan.dark ? BLACK : BLACK,
+                    border: `1px solid ${plan.dark ? WHITE : BLACK}`,
+                    padding: "14px 0",
+                    textDecoration: "none",
+                    textAlign: "center",
+                    display: "block",
+                    transition: "all 0.18s",
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = plan.dark ? GRAY2 : BLACK; e.currentTarget.style.color = WHITE; e.currentTarget.style.borderColor = plan.dark ? GRAY2 : BLACK; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = plan.dark ? WHITE : "transparent"; e.currentTarget.style.color = BLACK; e.currentTarget.style.borderColor = plan.dark ? WHITE : BLACK; }}
                 >
                   Get Started
                 </a>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── ABOUT ── */}
-      <section id="team" style={{ background: BLACK, padding: "120px 24px" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <motion.div {...fadeUp} style={{ marginBottom: "72px" }}>
-            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>About SetSpace</div>
-            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(36px, 4.5vw, 56px)", color: OFF_WHITE, lineHeight: 1.05, letterSpacing: "1px", margin: 0, maxWidth: "700px" }}>
-              We are a remote content and marketing agency
-            </h2>
-          </motion.div>
+      {/* ───────── ABOUT / TEAM ───────── */}
+      <section id="team" style={{ background: WHITE, padding: SEC_PAD }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          <Label>About SetSpace</Label>
+          <SectionHeadline style={{ maxWidth: "640px" }}>A remote content and marketing team built for wellness professionals</SectionHeadline>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }} className="grid-cols-1 md:grid-cols-2">
-            <motion.div {...fadeUp}>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "17px", color: OFF_WHITE, lineHeight: 1.8, marginBottom: "24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "start", marginTop: "64px" }}>
+            <div>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "17px", color: BLACK, lineHeight: 1.8, marginBottom: "24px" }}>
                 We help therapists, counselors, and wellness professionals generate leads and grow online. We handle strategy, video editing, reels, landing pages, and email nurture sequences — so you can focus on your clients.
               </p>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.8, marginBottom: "40px" }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.8, marginBottom: "48px" }}>
                 3 years in. 160+ clients helped. 1,000+ content pieces produced.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1px", background: DIVIDER }}>
                 {[
                   { value: "160+", label: "Clients Helped" },
                   { value: "1,000+", label: "Content Pieces" },
                   { value: "4.9★", label: "Average Rating" },
                   { value: "48h", label: "Avg. Turnaround" },
-                ].map((stat, i) => (
-                  <div key={i} style={{ background: CHARCOAL, padding: "24px", borderTop: `1px solid ${BORDER}` }}>
-                    <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "32px", color: OFF_WHITE, letterSpacing: "1px", lineHeight: 1 }}>{stat.value}</div>
-                    <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", color: GRAY, marginTop: "6px", letterSpacing: "1px", textTransform: "uppercase", fontWeight: 600 }}>{stat.label}</div>
+                ].map((s, i) => (
+                  <div key={i} style={{ background: WARM, padding: "24px" }}>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "28px", color: BLACK, lineHeight: 1 }}>{s.value}</div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "11px", color: GRAY, marginTop: "6px", textTransform: "uppercase", letterSpacing: "1px", fontWeight: 500 }}>{s.label}</div>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div {...fadeUp} transition={{ delay: 0.15 }}>
-              <div style={{ position: "relative" }}>
+            <div>
+              <div style={{ position: "relative", marginBottom: "2px" }}>
                 <img
                   src={`${import.meta.env.BASE_URL}images/ateeb.jpg`}
                   alt="Ateeb Hasan — Founder"
                   style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", display: "block" }}
                 />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85), transparent)", padding: "32px 24px 24px" }}>
-                  <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", color: OFF_WHITE, letterSpacing: "0.5px" }}>Ateeb Hasan</div>
-                  <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: GRAY, marginTop: "4px" }}>Founder & Creative Lead</div>
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)", padding: "32px 24px 20px" }}>
+                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: WHITE }}>Ateeb Hasan</div>
+                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY2, marginTop: "4px" }}>Founder & Creative Lead</div>
                 </div>
               </div>
-
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "2px", marginTop: "2px" }}>
-                {teamMembers.slice(0, 6).map(member => (
-                  <div key={member.name} style={{ flex: "1 1 calc(33.33% - 2px)", minWidth: "80px", position: "relative", aspectRatio: "1", overflow: "hidden" }}>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "2px" }}>
+                {teamMembers.slice(0, 6).map(m => (
+                  <div key={m.name} style={{ flex: "1 1 calc(33.33% - 2px)", minWidth: "60px", position: "relative", aspectRatio: "1", overflow: "hidden" }}>
                     <img
-                      src={`${import.meta.env.BASE_URL}images/${member.img}`}
-                      alt={member.name}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 10%", filter: "grayscale(20%)" }}
+                      src={`${import.meta.env.BASE_URL}images/${m.img}`}
+                      alt={m.name}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 10%" }}
                     />
-                    <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", transition: "background 0.2s" }} />
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section style={{ background: CHARCOAL, padding: "120px 24px" }}>
-        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-          <motion.div {...fadeUp} style={{ marginBottom: "64px" }}>
-            <div style={{ color: ORANGE, fontSize: "11px", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "16px", fontWeight: 600 }}>FAQ</div>
-            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(40px, 5vw, 60px)", color: OFF_WHITE, lineHeight: 1.02, letterSpacing: "1px", margin: 0 }}>
-              Common questions
-            </h2>
-          </motion.div>
+      {/* ───────── FAQ ───────── */}
+      <section style={{ background: WARM, padding: SEC_PAD }}>
+        <div style={{ maxWidth: "760px", margin: "0 auto" }}>
+          <Label>FAQ</Label>
+          <SectionHeadline>Common questions</SectionHeadline>
 
-          <div>
+          <div style={{ marginTop: "56px" }}>
             {[
               { q: "What kinds of clients do you work with?", a: "Therapists, counselors, wellness coaches, and service-based professionals who need consistent content and marketing without managing an in-house team. If you want to grow online while focusing on your clients — we're a good fit." },
               { q: "How does the process work?", a: "You share your goals, existing content, and brand references. We build a content plan, start producing, and deliver on a set schedule every month. You review, approve, and publish — or we handle that too." },
               { q: "What's the turnaround time?", a: "Reels and short clips are delivered within 48 hours. Long-form video edits within 72 hours. On the Full Engine plan, same-day delivery is available for urgent content." },
-              { q: "How does feedback and revisions work?", a: "You review via Google Drive or Frame.io and leave comments. We turn around revisions within 24 hours. Starter includes 3 revisions per piece; Growth and Full Engine include unlimited." },
+              { q: "How do revisions work?", a: "You review via Google Drive or Frame.io and leave comments. We turn around revisions within 24 hours. Starter includes 3 revisions per piece; Growth and Full Engine include unlimited." },
               { q: "Is there a contract?", a: "No lock-in contracts. We work month-to-month. We believe results are the only reason to stay — if we're not delivering, you shouldn't be billed." },
             ].map((item, i) => (
-              <motion.div
-                key={i}
-                {...fadeUp}
-                transition={{ delay: i * 0.06 }}
-                style={{ borderBottom: `1px solid ${BORDER}` }}
-              >
+              <div key={i} style={{ borderBottom: `1px solid ${DIVIDER}` }}>
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px 0", background: "none", border: "none", cursor: "pointer", gap: "24px", textAlign: "left" }}
                 >
-                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "20px", color: OFF_WHITE, letterSpacing: "0.5px", lineHeight: 1.2 }}>{item.q}</span>
-                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "24px", color: ORANGE, flexShrink: 0, lineHeight: 1 }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: BLACK, lineHeight: 1.4 }}>{item.q}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "22px", color: ORANGE, flexShrink: 0, lineHeight: 1, fontWeight: 400 }}>
                     {openFaq === i ? "−" : "+"}
                   </span>
                 </button>
-                <AnimatePresence>
-                  {openFaq === i && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      style={{ overflow: "hidden" }}
-                    >
-                      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.75, paddingBottom: "24px", margin: 0 }}>
-                        {item.a}
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                {openFaq === i && (
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: GRAY, lineHeight: 1.75, paddingBottom: "24px", margin: 0 }}>
+                    {item.a}
+                  </p>
+                )}
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section style={{ background: ORANGE, padding: "120px 24px", textAlign: "center" }}>
-        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-          <motion.div {...fadeUp}>
-            <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(48px, 7vw, 80px)", color: BLACK, lineHeight: 1.02, letterSpacing: "1px", marginBottom: "20px" }}>
-              Ready to build your marketing engine?
-            </h2>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "18px", color: BLACK, marginBottom: "48px", lineHeight: 1.6, opacity: 0.75 }}>
-              Book a free 20-minute audit call. No pitch, no pressure — just honest feedback.
-            </p>
-            <a
-              href={CALENDLY}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ background: BLACK, color: OFF_WHITE, fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", letterSpacing: "1px", padding: "18px 64px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
-              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-            >
-              Book Free Audit
-            </a>
-          </motion.div>
+      {/* ───────── CTA ───────── */}
+      <section style={{ background: WHITE, borderTop: `1px solid ${DIVIDER}`, padding: SEC_PAD, textAlign: "center" }}>
+        <div style={{ maxWidth: MAX_W, margin: "0 auto" }}>
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: "clamp(36px, 6vw, 72px)", color: BLACK, lineHeight: 1.08, margin: "0 auto 20px", maxWidth: "800px" }}>
+            Ready to build your marketing engine?
+          </h2>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "18px", color: GRAY, marginBottom: "48px" }}>
+            Book a free 20-minute audit call.
+          </p>
+          <a
+            href={CALENDLY}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "15px", background: BLACK, color: WHITE, padding: "18px 40px", textDecoration: "none", display: "inline-block", transition: "opacity 0.2s" }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.82")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+          >
+            Book Free Audit
+          </a>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: GRAY, marginTop: "20px" }}>
+            We respond within 24 hours.
+          </p>
         </div>
       </section>
 
