@@ -1,22 +1,19 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
-import { ContactModal } from "@/components/ContactModal";
 import { Menu, X } from "lucide-react";
 
-const BLACK = "#0A0A0A";
-const WHITE = "#FFFFFF";
-const GRAY = "#777777";
+const BLACK   = "#0A0A0A";
+const DARK    = "#1A1A1A";
+const WHITE   = "#FFFFFF";
+const ORANGE  = "#E84B1A";
 const DIVIDER = "#E8E8E8";
-const ORANGE = "#E84B1A";
 const CALENDLY = "https://calendly.com/ateebhasan-work/new-meeting";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
 
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 20);
+    const handle = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handle);
     return () => window.removeEventListener("scroll", handle);
   }, []);
@@ -35,8 +32,8 @@ export function Navbar() {
           left: 0,
           right: 0,
           zIndex: 40,
-          background: WHITE,
-          borderBottom: scrolled ? `1px solid ${DIVIDER}` : "1px solid transparent",
+          background: BLACK,
+          borderBottom: scrolled ? `1px solid ${DARK}` : "1px solid transparent",
           transition: "border-color 0.3s",
           padding: "0 24px",
         }}
@@ -51,25 +48,17 @@ export function Navbar() {
             height: "72px",
           }}
         >
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-            <img
-              src="/images/logo.png"
-              alt="SetSpace"
-              style={{ width: "36px", height: "36px", objectFit: "contain" }}
-            />
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontWeight: 700,
-                fontSize: "17px",
-                color: BLACK,
-                letterSpacing: "0.5px",
-              }}
-            >
-              SetSpace
+          {/* Logo */}
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
+            <div style={{ width: "32px", height: "32px", background: ORANGE, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: BLACK, lineHeight: 1 }}>S</span>
+            </div>
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: WHITE, letterSpacing: "3px" }}>
+              SETSPACE
             </span>
-          </Link>
+          </a>
 
+          {/* Desktop CTA */}
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <a
               href={CALENDLY}
@@ -79,17 +68,19 @@ export function Navbar() {
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontWeight: 600,
-                fontSize: "14px",
+                fontSize: "13px",
                 background: BLACK,
                 color: WHITE,
-                border: "none",
-                padding: "12px 20px",
+                border: `2px solid ${ORANGE}`,
+                padding: "10px 22px",
                 textDecoration: "none",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                transition: "background 0.3s, color 0.3s",
                 display: "inline-block",
-                transition: "opacity 0.2s",
               }}
-              onMouseEnter={e => (e.currentTarget.style.opacity = "0.82")}
-              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+              onMouseEnter={e => { e.currentTarget.style.background = ORANGE; e.currentTarget.style.color = BLACK; }}
+              onMouseLeave={e => { e.currentTarget.style.background = BLACK; e.currentTarget.style.color = WHITE; }}
             >
               Get Free Audit
             </a>
@@ -97,7 +88,7 @@ export function Navbar() {
             <button
               className="md:hidden"
               onClick={() => setMobileOpen(v => !v)}
-              style={{ background: "transparent", border: "none", color: BLACK, cursor: "pointer", padding: "4px", display: "flex" }}
+              style={{ background: "transparent", border: "none", color: WHITE, cursor: "pointer", padding: "4px", display: "flex" }}
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -105,13 +96,14 @@ export function Navbar() {
         </div>
       </header>
 
+      {/* Mobile overlay */}
       {mobileOpen && (
         <div
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 35,
-            background: WHITE,
+            background: BLACK,
             paddingTop: "80px",
             paddingLeft: "24px",
             paddingRight: "24px",
@@ -134,10 +126,10 @@ export function Navbar() {
                   fontFamily: "'DM Sans', sans-serif",
                   fontWeight: 700,
                   fontSize: "32px",
-                  color: BLACK,
+                  color: WHITE,
                   textDecoration: "none",
                   padding: "16px 0",
-                  borderBottom: `1px solid ${DIVIDER}`,
+                  borderBottom: `1px solid ${DARK}`,
                   display: "block",
                 }}
               >
@@ -155,12 +147,14 @@ export function Navbar() {
                 fontFamily: "'DM Sans', sans-serif",
                 fontWeight: 600,
                 fontSize: "15px",
-                background: BLACK,
-                color: WHITE,
+                background: ORANGE,
+                color: BLACK,
                 padding: "16px 0",
                 textDecoration: "none",
                 display: "block",
                 textAlign: "center",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
               }}
             >
               Get Free Audit
@@ -168,8 +162,6 @@ export function Navbar() {
           </div>
         </div>
       )}
-
-      <ContactModal open={contactOpen} onOpenChange={setContactOpen} />
     </>
   );
 }
