@@ -618,76 +618,92 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════
-          ABOUT — "remote content" blue accent (Figma)
+          ABOUT — left: text+stats  |  right: founder photo
+          then full-width team grid below
       ════════════════════════════════════ */}
-      <section id="team" style={{ padding:"120px 24px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+      <section id="team" style={{ padding:"120px 24px 80px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth:MAX_W,margin:"0 auto" }}>
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"80px",alignItems:"start" }}>
+
+          {/* ── Top two-column: text left, founder photo right ── */}
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"72px",alignItems:"center",marginBottom:"80px" }}>
 
             <SlideIn from="left">
-              {/* Figma: "A remote content and marketing team built for wellness professionals"
-                  "remote content" is blue gradient */}
-              <h2 style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"clamp(24px,3vw,40px)",lineHeight:1.275,margin:"0 0 32px",letterSpacing:"-1.2px",maxWidth:"533px" }}>
+              <h2 style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"clamp(24px,3vw,40px)",lineHeight:1.275,margin:"0 0 28px",letterSpacing:"-1.2px" }}>
                 <span style={{ background:"linear-gradient(to right,#fff,#999)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent" }}>A </span>
                 <span style={{ background:"linear-gradient(to right,#5ea6ff,#0071ff)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent" }}>remote content</span>
                 <span style={{ background:"linear-gradient(to right,#fff,#999)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent" }}> and marketing team built for wellness professionals</span>
               </h2>
 
-              <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"15px",color:GRAY2,lineHeight:1.8,margin:"0 0 48px" }}>
+              <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"15px",color:GRAY2,lineHeight:1.8,margin:"0 0 40px" }}>
                 We help therapists, counselors, coaches, and wellness professionals generate leads and grow online. We handle strategy, video editing, reels, landing pages, and email nurture sequences — so you can focus on your clients.
               </p>
 
-              {/* About stats: 4.9★ in blue gradient + 180+ */}
-              <div style={{ display:"flex",gap:"40px",alignItems:"center",flexWrap:"wrap" }}>
+              {/* Stats */}
+              <div style={{ display:"flex",gap:"36px",alignItems:"center",flexWrap:"wrap" }}>
                 <div>
-                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"clamp(40px,5vw,66px)",background:"linear-gradient(to bottom,#c3deff 19%,#0071ff 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",lineHeight:1,letterSpacing:"-1px" }}>4.9★</div>
+                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"clamp(36px,4vw,56px)",background:"linear-gradient(to bottom,#c3deff 19%,#0071ff 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",lineHeight:1,letterSpacing:"-1px" }}>4.9★</div>
                   <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"14px",color:GRAY2,marginTop:"6px" }}>Avg. Rating</div>
                 </div>
                 <VDivider />
                 <div>
-                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"clamp(40px,5vw,66px)",background:"linear-gradient(to bottom,#fafafa 19%,#949494 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",lineHeight:1,letterSpacing:"-1px" }}>
+                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"clamp(36px,4vw,56px)",background:"linear-gradient(to bottom,#fafafa 19%,#949494 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",lineHeight:1,letterSpacing:"-1px" }}>
                     <CountUp to={180} suffix="+" />
                   </div>
                   <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"14px",color:GRAY2,marginTop:"6px" }}>Clients</div>
                 </div>
               </div>
-
-              {/* "Our Team" label */}
-              <p style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"28px",background:"linear-gradient(to bottom,#fafafa 19%,#0071ff 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",margin:"56px 0 0",letterSpacing:"-0.5px" }}>
-                Our Team
-              </p>
             </SlideIn>
 
+            {/* Founder photo */}
             <SlideIn from="right" delay={0.1}>
-              {/* Founder photo — Ken Burns */}
-              <div style={{ position:"relative",marginBottom:"10px",borderRadius:"20px",overflow:"hidden",border:`2px solid ${BLUE}`,boxShadow:"-11px -8px 30px 0px rgba(26,127,255,0.2)",aspectRatio:"4/3" }}>
+              <div style={{ position:"relative",borderRadius:"24px",overflow:"hidden",border:`2px solid ${BLUE}`,boxShadow:"-11px -8px 30px 0px rgba(26,127,255,0.2)",aspectRatio:"3/4" }}>
                 <img src={`${import.meta.env.BASE_URL}images/ateeb.jpg`} alt="Ateeb Hasan — Founder"
                   className="kb-founder"
-                  style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",willChange:"transform" }} />
-                <div style={{ position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(to top,rgba(0,0,0,0.85),transparent)",padding:"32px 24px 20px" }}>
-                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"16px",color:WHITE }}>Ateeb Hasan</div>
-                  <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"13px",color:BLUE,marginTop:"2px" }}>Founder & Creative Lead</div>
+                  style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block",willChange:"transform" }} />
+                <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 50%)" }} />
+                <div style={{ position:"absolute",bottom:"24px",left:"24px" }}>
+                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"17px",color:WHITE }}>Ateeb Hasan</div>
+                  <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"13px",color:BLUE,marginTop:"3px" }}>Founder &amp; Creative Lead</div>
                 </div>
-              </div>
-
-              {/* Team grid — Ken Burns on each */}
-              <div className="team-grid" style={{ marginTop:"10px" }}>
-                {teamMembers.map(m => (
-                  <motion.div key={m.name} whileHover={{ scale:1.04,zIndex:2 }} transition={{ type:"spring",stiffness:300,damping:20 }}
-                    className="photo-frame" style={{ aspectRatio:"1",position:"relative" }} title={`${m.name} — ${m.role}`}>
-                    <img src={`${import.meta.env.BASE_URL}images/${m.img}`} alt={m.name}
-                      className={m.kb}
-                      style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 10%",display:"block",willChange:"transform" }} />
-                    <motion.div initial={{ opacity:0 }} whileHover={{ opacity:1 }}
-                      style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.9),transparent 60%)",display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"10px 8px",pointerEvents:"none" }}>
-                      <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"11px",color:WHITE,lineHeight:1.2 }}>{m.name}</div>
-                      <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"9px",color:BLUE,marginTop:"1px" }}>{m.role}</div>
-                    </motion.div>
-                  </motion.div>
-                ))}
               </div>
             </SlideIn>
           </div>
+
+          {/* ── "Our Team" heading — full width ── */}
+          <FadeUp style={{ marginBottom:"32px" }}>
+            <p style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"28px",background:"linear-gradient(to bottom,#fafafa 19%,#0071ff 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",margin:0,letterSpacing:"-0.5px" }}>
+              Our Team
+            </p>
+          </FadeUp>
+
+          {/* ── Team grid — 6 members across full width, 3 cols ── */}
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"12px" }}>
+            {teamMembers.map((m,i) => (
+              <FadeUp key={m.name} delay={i*0.07}>
+                <motion.div
+                  whileHover={{ scale:1.03 }}
+                  transition={{ type:"spring",stiffness:300,damping:22 }}
+                  className="photo-frame"
+                  style={{ aspectRatio:"4/3",position:"relative" }}
+                  title={`${m.name} — ${m.role}`}
+                >
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/${m.img}`}
+                    alt={m.name}
+                    className={m.kb}
+                    style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block",willChange:"transform" }}
+                  />
+                  {/* Name + role always visible at bottom */}
+                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 55%)",pointerEvents:"none" }} />
+                  <div style={{ position:"absolute",bottom:"14px",left:"16px",right:"16px" }}>
+                    <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"14px",color:WHITE,lineHeight:1.2 }}>{m.name}</div>
+                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",color:BLUE,marginTop:"3px" }}>{m.role}</div>
+                  </div>
+                </motion.div>
+              </FadeUp>
+            ))}
+          </div>
+
         </div>
       </section>
 
