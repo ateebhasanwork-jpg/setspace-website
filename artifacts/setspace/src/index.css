@@ -159,59 +159,64 @@
 
 /* ── KEN BURNS (pan + zoom on team photos) ── */
 @keyframes kenBurnsA {
-  0%   { transform: scale(1.08) translate(0%, 0%); }
-  100% { transform: scale(1.14) translate(-3%, -2%); }
+  0%   { transform: scale(1.18) translate(0%,    0%);   }
+  100% { transform: scale(1.28) translate(-8%,  -6%);   }
 }
 @keyframes kenBurnsB {
-  0%   { transform: scale(1.06) translate(2%, 1%); }
-  100% { transform: scale(1.12) translate(-2%, -3%); }
+  0%   { transform: scale(1.20) translate(7%,    4%);   }
+  100% { transform: scale(1.12) translate(-6%,  -8%);   }
 }
 @keyframes kenBurnsC {
-  0%   { transform: scale(1.1) translate(-2%, 2%); }
-  100% { transform: scale(1.05) translate(3%, -1%); }
+  0%   { transform: scale(1.22) translate(-5%,   6%);   }
+  100% { transform: scale(1.14) translate(9%,   -4%);   }
 }
 @keyframes kenBurnsD {
-  0%   { transform: scale(1.07) translate(1%, -2%); }
-  100% { transform: scale(1.13) translate(-3%, 2%); }
+  0%   { transform: scale(1.16) translate(4%,   -6%);   }
+  100% { transform: scale(1.26) translate(-9%,   7%);   }
 }
 @keyframes kenBurnsE {
-  0%   { transform: scale(1.09) translate(-1%, 1%); }
-  100% { transform: scale(1.05) translate(2%, -3%); }
+  0%   { transform: scale(1.24) translate(-3%,   5%);   }
+  100% { transform: scale(1.14) translate(8%,   -7%);   }
 }
 @keyframes kenBurnsF {
-  0%   { transform: scale(1.06) translate(0%, -1%); }
-  100% { transform: scale(1.12) translate(-2%, 2%); }
+  0%   { transform: scale(1.18) translate(0%,   -4%);   }
+  100% { transform: scale(1.28) translate(-7%,   8%);   }
 }
 
-.kb-a { animation: kenBurnsA 8s ease-in-out infinite alternate; }
-.kb-b { animation: kenBurnsB 9s ease-in-out infinite alternate; }
-.kb-c { animation: kenBurnsC 10s ease-in-out infinite alternate; }
-.kb-d { animation: kenBurnsD 8.5s ease-in-out infinite alternate; }
-.kb-e { animation: kenBurnsE 9.5s ease-in-out infinite alternate; }
-.kb-f { animation: kenBurnsF 11s ease-in-out infinite alternate; }
+.kb-a { animation: kenBurnsA 10s ease-in-out infinite alternate; }
+.kb-b { animation: kenBurnsB 12s ease-in-out infinite alternate; }
+.kb-c { animation: kenBurnsC 11s ease-in-out infinite alternate; }
+.kb-d { animation: kenBurnsD  9s ease-in-out infinite alternate; }
+.kb-e { animation: kenBurnsE 13s ease-in-out infinite alternate; }
+.kb-f { animation: kenBurnsF 10s ease-in-out infinite alternate; }
 
 .photo-frame {
   overflow: hidden;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  /* isolate so overflow clip works with motion.div transforms */
+  isolation: isolate;
 }
 .photo-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 10%;
+  object-position: center top;
   display: block;
   will-change: transform;
+  /* start already scaled so there's room to pan */
+  transform-origin: center center;
 }
 
 /* ── FOUNDER PHOTO KEN BURNS ── */
 @keyframes kenBurnsFounder {
-  0%   { transform: scale(1.04) translate(0%, 0%); }
-  50%  { transform: scale(1.08) translate(-2%, -1%); }
-  100% { transform: scale(1.04) translate(0%, 0%); }
+  0%   { transform: scale(1.08) translate(0%,   0%);  }
+  50%  { transform: scale(1.14) translate(-4%,  -3%); }
+  100% { transform: scale(1.08) translate(0%,   0%);  }
 }
 .kb-founder {
-  animation: kenBurnsFounder 12s ease-in-out infinite;
+  animation: kenBurnsFounder 14s ease-in-out infinite;
 }
 
 /* ── HERO GRID ── */
