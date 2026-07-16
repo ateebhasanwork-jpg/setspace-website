@@ -131,6 +131,56 @@ function SlideIn({ children, delay=0, from="left" }: { children:React.ReactNode;
   );
 }
 
+/* ── Video thumbnail with multi-step fallback ── */
+function VideoThumb({ item, onClick }: {
+  item: { videoId:string; title:string; category:string; client:string };
+  onClick: () => void;
+}) {
+  const STEPS = [
+    `https://img.youtube.com/vi/${item.videoId}/maxresdefault.jpg`,
+    `https://img.youtube.com/vi/${item.videoId}/sddefault.jpg`,
+    `https://img.youtube.com/vi/${item.videoId}/hqdefault.jpg`,
+  ];
+  const [step, setStep] = useState(0);
+  const failed = step >= STEPS.length;
+
+  return (
+    <motion.div
+      className="port-thumb"
+      onClick={onClick}
+      initial={{ opacity:0, scale:0.95 }}
+      animate={{ opacity:1, scale:1 }}
+    >
+      {failed ? (
+        /* Branded dark placeholder — never looks broken */
+        <div style={{ width:"100%",height:"100%",background:"linear-gradient(135deg,#0a0a0a,#111827)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"10px" }}>
+          <div style={{ width:"44px",height:"44px",borderRadius:"50%",background:"rgba(45,138,255,0.2)",border:"1px solid rgba(45,138,255,0.4)",display:"flex",alignItems:"center",justifyContent:"center" }}>
+            <Play style={{ width:"16px",height:"16px",color:BLUE,marginLeft:"2px" }} fill={BLUE} />
+          </div>
+          <span style={{ fontFamily:"'Poppins',sans-serif",fontSize:"11px",color:"#444" }}>SetSpace</span>
+        </div>
+      ) : (
+        <img
+          src={STEPS[step]}
+          alt={item.title}
+          onError={() => setStep(s => s + 1)}
+          style={{ width:"100%",height:"100%",objectFit:"cover",display:"block",transition:"transform 0.5s ease" }}
+        />
+      )}
+      <div className="port-overlay">
+        <div style={{ width:"48px",height:"48px",borderRadius:"50%",background:"rgba(45,138,255,0.85)",border:"2px solid rgba(255,255,255,0.3)",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)",boxShadow:"0 0 24px rgba(0,113,255,0.5)" }}>
+          <Play style={{ width:"16px",height:"16px",color:WHITE,marginLeft:"2px" }} fill={WHITE} />
+        </div>
+      </div>
+      <div className="port-info">
+        <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"10px",fontWeight:600,textTransform:"uppercase",letterSpacing:"1.5px",color:BLUE,marginBottom:"2px" }}>{item.category}</div>
+        <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",fontWeight:600,color:WHITE,lineHeight:1.3 }}>{item.title}</div>
+        <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"11px",color:GRAY2,marginTop:"2px" }}>{item.client}</div>
+      </div>
+    </motion.div>
+  );
+}
+
 /* Figma gradient heading style — white→gray, used for all big section titles */
 const GradH = ({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) => (
   <h2 style={{
@@ -426,25 +476,16 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Thumbnail grid — 4 columns */}
+          {/* Thumbnail grid — 4 columns, VideoThumb handles fallback */}
           <AnimatePresence mode="popLayout">
             <motion.div key={activeTab} initial={{ opacity:0,y:16 }} animate={{ opacity:1,y:0 }} exit={{ opacity:0,y:-8 }} transition={{ duration:0.35 }}
               style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"12px" }}>
               {filtered.map((item,i) => (
-                <motion.div key={item.id} initial={{ opacity:0,scale:0.95 }} animate={{ opacity:1,scale:1 }} transition={{ delay:i*0.04,duration:0.4 }}
-                  className="port-thumb" onClick={()=>setActiveVideo({ videoId:item.videoId,title:item.title })}>
-                  <img src={`https://img.youtube.com/vi/${item.videoId}/maxresdefault.jpg`} alt={item.title}
-                    onError={e=>{(e.currentTarget as HTMLImageElement).src=`https://img.youtube.com/vi/${item.videoId}/hqdefault.jpg`;}} />
-                  <div className="port-overlay">
-                    <div style={{ width:"48px",height:"48px",borderRadius:"50%",background:"rgba(45,138,255,0.85)",border:"2px solid rgba(255,255,255,0.3)",display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)",boxShadow:"0 0 24px rgba(0,113,255,0.5)" }}>
-                      <Play style={{ width:"16px",height:"16px",color:WHITE,marginLeft:"2px" }} fill={WHITE} />
-                    </div>
-                  </div>
-                  <div className="port-info">
-                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"10px",fontWeight:600,textTransform:"uppercase",letterSpacing:"1.5px",color:BLUE,marginBottom:"2px" }}>{item.category}</div>
-                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",fontWeight:600,color:WHITE,lineHeight:1.3 }}>{item.title}</div>
-                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"11px",color:GRAY2,marginTop:"2px" }}>{item.client}</div>
-                  </div>
+                <motion.div key={item.id} initial={{ opacity:0,scale:0.95 }} animate={{ opacity:1,scale:1 }} transition={{ delay:i*0.04,duration:0.4 }}>
+                  <VideoThumb
+                    item={item}
+                    onClick={() => setActiveVideo({ videoId:item.videoId, title:item.title })}
+                  />
                 </motion.div>
               ))}
             </motion.div>
