@@ -618,18 +618,47 @@ export default function Home() {
             <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: "12px", textTransform: "uppercase", letterSpacing: "3px", color: BLUE, marginBottom: "32px" }}>Social Proof</div>
 
             {/* Testimonials */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: "16px", marginBottom: "48px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "16px", marginBottom: "48px" }}>
               {[
-                { quote: "Communication was always clear and smooth. He regularly contributed ideas and suggestions — it felt like a true collaboration.", name: "Philipp F.", role: "Finance Creator, YouTube" },
-                { quote: "Exceptional quality and delivered ahead of schedule. The content strategy transformed how I show up online for my clients.", name: "Sarah M.", role: "Wellness Coach" },
+                {
+                  quote: "Communication is excellent. This is where I'm going when I need content work and I can't recommend them enough. He delivered more than what I asked for, and stayed in touch through the entire process.",
+                  name: "Muhammad Helal",
+                  role: "Founder, Flagship Media",
+                  initials: "MH",
+                },
+                {
+                  quote: "Communication was smooth with no confusion throughout the project. I will absolutely hire this freelancer again for future projects. Highly recommended.",
+                  name: "Dr. Luzelena Rivers",
+                  role: "Enterprising Women Foundation",
+                  initials: "LR",
+                },
+                {
+                  quote: "Communication was always clear and smooth. He regularly contributed ideas and suggestions instead of just executing tasks — it felt like a true collaboration.",
+                  name: "Philipp F.",
+                  role: "Finance Creator, YouTube",
+                  initials: "PF",
+                },
               ].map((t, i) => (
-                <FadeUp key={i} delay={i * 0.15}>
-                  <div className="glass-card" style={{ borderRadius: "16px", padding: "28px", textAlign: "left" }}>
-                    <p style={{ fontFamily: "'Poppins', sans-serif", fontStyle: "italic", fontSize: "14px", color: "rgba(255,255,255,0.8)", lineHeight: 1.7, margin: "0 0 20px" }}>
+                <FadeUp key={i} delay={i * 0.12}>
+                  <div className="glass-card" style={{ borderRadius: "16px", padding: "28px", textAlign: "left", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                    {/* Stars */}
+                    <div style={{ display: "flex", gap: "2px", marginBottom: "16px" }}>
+                      {[0,1,2,3,4].map(s => (
+                        <span key={s} style={{ color: "#FFD700", fontSize: "13px" }}>★</span>
+                      ))}
+                    </div>
+                    <p style={{ fontFamily: "'Poppins', sans-serif", fontStyle: "italic", fontSize: "13px", color: "rgba(255,255,255,0.8)", lineHeight: 1.75, margin: "0 0 20px", flex: 1 }}>
                       "{t.quote}"
                     </p>
-                    <div style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: "13px", color: WHITE }}>{t.name}</div>
-                    <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: "12px", color: BLUE, marginTop: "2px" }}>{t.role}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "linear-gradient(135deg, #2D8AFF, #0071FF)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <span style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, fontSize: "11px", color: WHITE }}>{t.initials}</span>
+                      </div>
+                      <div>
+                        <div style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: "13px", color: WHITE }}>{t.name}</div>
+                        <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: "11px", color: BLUE, marginTop: "1px" }}>{t.role}</div>
+                      </div>
+                    </div>
                   </div>
                 </FadeUp>
               ))}
