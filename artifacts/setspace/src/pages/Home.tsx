@@ -49,15 +49,6 @@ const portfolioItems = [
 ];
 const CATS = ["All","YouTube","Reels","Ads","AI"];
 
-/* ── TEAM ── */
-const teamMembers = [
-  { name:"Zoha Adnan",      role:"Lead Gen Executive",         img:"zoha.jpeg",   kb:"kb-a" },
-  { name:"Jaffer Naqvi",    role:"Video Designer",             img:"jaffer.jpeg", kb:"kb-b" },
-  { name:"Sani e Zehra",    role:"Social Media Designer",      img:"sani.jpeg",   kb:"kb-c" },
-  { name:"Muhammad Ashhad", role:"Video Editor",               img:"ashad.jpeg",  kb:"kb-d" },
-  { name:"Laiba Malik",     role:"HR & Ops Executive",         img:"laiba.jpeg",  kb:"kb-e" },
-  { name:"Zayd Saleem",     role:"Explainer Video Specialist", img:"zayd.jpeg",   kb:"kb-f" },
-];
 
 /* ════════════════════════════════════
    HOOKS
@@ -661,13 +652,12 @@ export default function Home() {
 
       {/* ════════════════════════════════════
           ABOUT — left: text+stats  |  right: founder photo
-          then full-width team grid below
       ════════════════════════════════════ */}
-      <section id="team" style={{ padding:"120px 24px 80px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+      <section id="team" style={{ padding:"120px 24px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth:MAX_W,margin:"0 auto" }}>
 
           {/* ── Top two-column: text left, founder photo right ── */}
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"72px",alignItems:"center",marginBottom:"80px" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"72px",alignItems:"center" }}>
 
             <SlideIn from="left">
               <h2 style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"clamp(24px,3vw,40px)",lineHeight:1.275,margin:"0 0 28px",letterSpacing:"-1.2px" }}>
@@ -709,41 +699,6 @@ export default function Home() {
                 </div>
               </div>
             </SlideIn>
-          </div>
-
-          {/* ── "Our Team" heading — full width ── */}
-          <FadeUp style={{ marginBottom:"32px" }}>
-            <p style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"28px",background:"linear-gradient(to bottom,#fafafa 19%,#0071ff 100%)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",margin:0,letterSpacing:"-0.5px" }}>
-              Our Team
-            </p>
-          </FadeUp>
-
-          {/* ── Team grid — 6 members across full width, 3 cols ── */}
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"12px" }}>
-            {teamMembers.map((m,i) => (
-              <FadeUp key={m.name} delay={i*0.07}>
-                <motion.div
-                  whileHover={{ scale:1.03 }}
-                  transition={{ type:"spring",stiffness:300,damping:22 }}
-                  className="photo-frame"
-                  style={{ aspectRatio:"4/3",position:"relative" }}
-                  title={`${m.name} — ${m.role}`}
-                >
-                  <img
-                    src={`${import.meta.env.BASE_URL}images/${m.img}`}
-                    alt={m.name}
-                    className={m.kb}
-                    style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block",willChange:"transform" }}
-                  />
-                  {/* Name + role always visible at bottom */}
-                  <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.82) 0%,transparent 55%)",pointerEvents:"none" }} />
-                  <div style={{ position:"absolute",bottom:"14px",left:"16px",right:"16px" }}>
-                    <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"14px",color:WHITE,lineHeight:1.2 }}>{m.name}</div>
-                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",color:BLUE,marginTop:"3px" }}>{m.role}</div>
-                  </div>
-                </motion.div>
-              </FadeUp>
-            ))}
           </div>
 
         </div>
