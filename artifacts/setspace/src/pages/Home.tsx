@@ -211,57 +211,45 @@ export default function Home() {
       <Navbar />
 
       {/* ════════════════════════════════════
-          HERO — centered layout (Figma exact)
+          HERO — Figma: text top-center, glass card BELOW buttons
       ════════════════════════════════════ */}
-      <section style={{ position:"relative", minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", paddingTop:"120px", paddingBottom:"80px", overflow:"hidden", textAlign:"center" }}>
+      <section style={{ position:"relative", display:"flex", flexDirection:"column", alignItems:"center", overflow:"hidden", paddingBottom:0 }}>
 
-        {/* hero-bg.png — the dark smoke/light-ray texture from Figma, full bleed */}
+        {/* Smoke texture — full bleed background */}
         <div style={{ position:"absolute", inset:0, pointerEvents:"none", zIndex:0 }}>
           <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
-            style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.55, mixBlendMode:"lighten" }} />
+            style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.5, mixBlendMode:"lighten" }} />
+          {/* Blue parallax glow */}
+          <div style={{ position:"absolute", top:"30%", left:"40%", width:"600px", height:"600px", borderRadius:"50%", background:"radial-gradient(circle, rgba(0,113,255,0.12) 0%, transparent 70%)", transform:`translate(${parallax.x * 1.2}px, ${parallax.y * 1.2}px)`, transition:"transform 0.15s ease-out" }} />
         </div>
 
-        {/* Background blobs */}
-        <div style={{ position:"absolute", inset:0, overflow:"hidden", pointerEvents:"none", zIndex:1 }}>
-          {/* Parallax blue glow */}
-          <div style={{ position:"absolute", top:"30%", left:"40%", width:"600px", height:"600px", borderRadius:"50%", background:"radial-gradient(circle, rgba(0,113,255,0.13) 0%, transparent 70%)", transform:`translate(${parallax.x * 1.2}px, ${parallax.y * 1.2}px)`, transition:"transform 0.15s ease-out" }} />
-        </div>
-
-        {/* Figma: Large blurred glass card — hero-card.jpg (real team photo) blurred behind text */}
-        <div style={{ position:"absolute", top:"50%", left:"50%", transform:`translate(-50%,-50%) translate(${parallax.x * 0.2}px, ${parallax.y * 0.2}px)`, width:"min(1136px,90vw)", height:"385px", borderRadius:"33px", border:"3px solid rgba(255,255,255,0.12)", backdropFilter:"blur(3.15px)", WebkitBackdropFilter:"blur(3.15px)", boxShadow:"-44px -35px 100px 0px rgba(253,253,253,0.09)", overflow:"hidden", pointerEvents:"none", transition:"transform 0.2s ease-out", zIndex:2 }}>
-          <img src={`${import.meta.env.BASE_URL}images/hero-card.jpg`} alt=""
-            style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", objectPosition:"center 30%", opacity:0.55 }} />
-          <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top,rgba(5,5,5,0.88) 0%,rgba(5,5,5,0.45) 50%,rgba(5,5,5,0.25) 100%)" }} />
-        </div>
-
-        {/* Hero content */}
-        <div style={{ position:"relative", zIndex:3, maxWidth:"780px", margin:"0 auto", padding:"0 24px" }}>
+        {/* ── Text block ── */}
+        <div style={{ position:"relative", zIndex:2, textAlign:"center", maxWidth:"780px", margin:"0 auto", padding:"160px 24px 56px" }}>
           {/* Label */}
-          <div className="fade-word" style={{ animationDelay:"0s", fontFamily:"'Poppins',sans-serif", fontWeight:400, fontSize:"16px", background:"linear-gradient(266.8deg,#fafafa 2%,#949494 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:"24px", opacity:0 }}>
+          <div className="fade-word" style={{ animationDelay:"0s", fontFamily:"'Poppins',sans-serif", fontWeight:400, fontSize:"16px", background:"linear-gradient(266.8deg,#fafafa 2%,#949494 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:"20px", opacity:0 }}>
             Content &amp; Marketing Engine
           </div>
 
           {/* Headline */}
-          <h1 style={{ fontFamily:"'Poppins',sans-serif", fontWeight:500, fontSize:"clamp(40px,6vw,66px)", color:"#c9c9c9", lineHeight:1.1, margin:"0 0 4px", letterSpacing:"-2.64px", textAlign:"center" }}>
+          <h1 style={{ fontFamily:"'Poppins',sans-serif", fontWeight:500, fontSize:"clamp(40px,6vw,66px)", color:"#c9c9c9", lineHeight:1.1, margin:"0 0 4px", letterSpacing:"-2.64px" }}>
             We build your
           </h1>
-          <h1 style={{ fontFamily:"'Poppins',sans-serif", fontWeight:600, fontSize:"clamp(40px,6vw,66px)", lineHeight:1.1, margin:"0 0 32px", letterSpacing:"-2.64px", textAlign:"center" }}>
-            {["Marke","ti"].map((w,i)=>(
-              <span key={i} className="fade-word" style={{ animationDelay:`${0.15+i*0.12}s`, color:WHITE }}>{w}</span>
-            ))}
+          <h1 style={{ fontFamily:"'Poppins',sans-serif", fontWeight:600, fontSize:"clamp(40px,6vw,66px)", lineHeight:1.1, margin:"0 0 28px", letterSpacing:"-2.64px" }}>
+            <span className="fade-word" style={{ animationDelay:"0.15s", color:WHITE }}>Marke</span>
+            <span className="fade-word" style={{ animationDelay:"0.27s", color:WHITE }}>ti</span>
             <span className="fade-word" style={{ animationDelay:"0.4s", fontFamily:"'DM Serif Display',serif", fontStyle:"italic", color:WHITE }}>ng</span>
             {" "}
             <span className="fade-word" style={{ animationDelay:"0.5s", color:BLUE }}>Eng</span>
             <span className="fade-word" style={{ animationDelay:"0.6s", fontFamily:"'DM Serif Display',serif", fontStyle:"italic", color:BLUE }}>ine</span>
           </h1>
 
-          {/* Sub */}
-          <p style={{ fontFamily:"'Poppins',sans-serif", fontWeight:400, fontSize:"18px", color:"#fafafa", lineHeight:1.65, margin:"0 auto 40px", maxWidth:"585px" }}>
+          {/* Subheading */}
+          <p style={{ fontFamily:"'Poppins',sans-serif", fontWeight:400, fontSize:"18px", color:"#fafafa", lineHeight:1.65, margin:"0 auto 36px", maxWidth:"585px" }}>
             Done-for-you content and marketing for therapists, counselors, coaches, and wellness professionals.
           </p>
 
-          {/* Buttons — exact Figma layout */}
-          <div style={{ display:"flex", gap:"20px", justifyContent:"center", flexWrap:"wrap", marginBottom:"0" }}>
+          {/* Buttons */}
+          <div style={{ display:"flex", gap:"20px", justifyContent:"center", flexWrap:"wrap" }}>
             <BlueBtn href={CALENDLY}>Get Free Audit</BlueBtn>
             <OutlineBtn href="#blueprint" onClick={e=>{ e.preventDefault(); document.querySelector("#blueprint")?.scrollIntoView({ behavior:"smooth" }); }}>
               Download Free Framework
@@ -269,8 +257,17 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Glow divider */}
-        <div style={{ position:"absolute", bottom:0, left:0, right:0, height:"1px", background:"linear-gradient(90deg,transparent 0%,rgba(45,138,255,0.4) 30%,rgba(45,138,255,0.7) 50%,rgba(45,138,255,0.4) 70%,transparent 100%)" }} />
+        {/* ── Figma glass card — BELOW buttons, team photo blurred ── */}
+        <div style={{ position:"relative", zIndex:2, width:"min(1136px,92vw)", margin:"0 auto", flexShrink:0 }}>
+          <div style={{ height:"385px", borderRadius:"33px", border:"3px solid rgba(255,255,255,0.13)", backdropFilter:"blur(3.15px)", WebkitBackdropFilter:"blur(3.15px)", boxShadow:"-44px -35px 100px 0px rgba(253,253,253,0.07)", overflow:"hidden" }}>
+            <img src={`${import.meta.env.BASE_URL}images/hero-card.jpg`} alt="SetSpace team"
+              style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"center 35%", display:"block", opacity:0.65 }} />
+            <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(5,5,5,0.82) 0%, rgba(5,5,5,0.35) 55%, rgba(5,5,5,0.1) 100%)" }} />
+          </div>
+        </div>
+
+        {/* Glow line at bottom */}
+        <div style={{ position:"relative", zIndex:2, width:"100%", height:"1px", marginTop:0, background:"linear-gradient(90deg,transparent 0%,rgba(45,138,255,0.5) 30%,rgba(45,138,255,0.8) 50%,rgba(45,138,255,0.5) 70%,transparent 100%)" }} />
       </section>
 
       {/* ════════════════════════════════════
@@ -569,7 +566,7 @@ export default function Home() {
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"16px",marginBottom:"80px" }}>
             {[
               { quote:"Ateeb and his team are the best I've worked with. Their service is beyond just video editing. They've given me strategies, suggestions to grow, delivered more than I asked for, and stayed in touch through the entire process. Communication is excellent. This is where I'm going when I need content work and I can't recommend them enough.", name:"Muhammad Helal",    role:"Founder, Flagship Media",              initials:"MH" },
-              { quote:"Really great experience working with Atteeb on my Ironman content. He was easy to work with, communicated well, and did a great job putting the videos together. The edits came out clean and captured the race experience really well. He was also open to feedback and made changes quickly when needed. Overall, happy with how everything turned out.", name:"Upwork Client",       role:"Video Content",                        initials:"UC" },
+              { quote:"Really great experience working with Atteeb on my Ironman content. He was easy to work with, communicated well, and did a great job putting the videos together. The edits came out clean and captured the race experience really well. He was also open to feedback and made changes quickly when needed. Overall, happy with how everything turned out.", name:"Naomi",              role:"Ironman Content Creator",              initials:"N"  },
               { quote:"Communication was smooth with no confusion throughout the project. I will absolutely hire this freelancer again for future projects. Highly recommended.",                                                                                                                                                                                        name:"Dr. Luzelena Rivers", role:"Enterprising Women Foundation",        initials:"LR" },
               { quote:"Communication was always clear and smooth. He regularly contributed ideas and suggestions instead of just executing tasks — it felt like a true collaboration.",                                                                                                                                                                                 name:"Philipp F.",           role:"Finance Creator, YouTube",             initials:"PF" },
             ].map((t,i) => (
