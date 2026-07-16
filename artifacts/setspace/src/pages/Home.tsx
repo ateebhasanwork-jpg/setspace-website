@@ -215,35 +215,27 @@ export default function Home() {
       ════════════════════════════════════ */}
       <section style={{ position:"relative", minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", paddingTop:"120px", paddingBottom:"80px", overflow:"hidden", textAlign:"center" }}>
 
-        {/* Background texture / rotated light blobs */}
-        <div style={{ position:"absolute", inset:0, overflow:"hidden", pointerEvents:"none" }}>
-          {/* Top-left rotated blob */}
-          <div style={{ position:"absolute", top:"-9px", left:"-7px", width:"1451px", height:"968px", transform:"rotate(90deg) translateX(-40%)", opacity:0.44, filter:"blur(5.7px)", mixBlendMode:"lighten" }}>
-            <div style={{ width:"100%", height:"100%", background:"radial-gradient(ellipse 60% 80% at 50% 0%, rgba(45,100,255,0.6), transparent)" }} />
-          </div>
-          {/* Diagonal line (from Figma) */}
-          <div style={{ position:"absolute", top:"-294px", left:"360px", width:"340px", height:"1350px", transform:"rotate(15.54deg)", opacity:0.15 }}>
-            <div style={{ position:"absolute", top:0, left:0,    width:"2px",  height:"100%", background:"linear-gradient(to bottom,transparent,#2D8AFF,transparent)" }} />
-            <div style={{ position:"absolute", top:0, left:"60px", width:"1px", height:"100%", background:"linear-gradient(to bottom,transparent,#509dff,transparent)", opacity:0.5 }} />
-            <div style={{ position:"absolute", top:0, left:"120px",width:"1px", height:"100%", background:"linear-gradient(to bottom,transparent,#2D8AFF,transparent)", opacity:0.3 }} />
-          </div>
-          {/* Parallax blue glow */}
-          <div style={{ position:"absolute", top:"30%", left:"40%", width:"600px", height:"600px", borderRadius:"50%", background:"radial-gradient(circle, rgba(0,113,255,0.15) 0%, transparent 70%)", transform:`translate(${parallax.x * 1.2}px, ${parallax.y * 1.2}px)`, transition:"transform 0.15s ease-out" }} />
+        {/* hero-bg.png — the dark smoke/light-ray texture from Figma, full bleed */}
+        <div style={{ position:"absolute", inset:0, pointerEvents:"none", zIndex:0 }}>
+          <img src={`${import.meta.env.BASE_URL}images/hero-bg.png`} alt=""
+            style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", opacity:0.55, mixBlendMode:"lighten" }} />
         </div>
 
-        {/* Figma: Large blurred glass card spanning behind hero content */}
-        <div style={{ position:"absolute", top:"50%", left:"50%", transform:`translate(-50%,-50%) translate(${parallax.x * 0.2}px, ${parallax.y * 0.2}px)`, width:"min(1136px,90vw)", height:"385px", borderRadius:"33px", border:"3px solid rgba(255,255,255,0.12)", backdropFilter:"blur(3.15px)", WebkitBackdropFilter:"blur(3.15px)", background:"rgba(255,255,255,0.02)", boxShadow:"-44px -35px 100px 0px rgba(253,253,253,0.09)", overflow:"hidden", pointerEvents:"none", transition:"transform 0.2s ease-out" }}>
-          <iframe
-            src={`https://www.youtube.com/embed/${HERO_VIDEO}?autoplay=0&controls=0&loop=1&rel=0&playlist=${HERO_VIDEO}&mute=1&modestbranding=1`}
-            title="Hero Video"
-            allow="autoplay; encrypted-media"
-            style={{ position:"absolute", inset:"-10%", width:"120%", height:"120%", border:"none", opacity:0.35, pointerEvents:"none" }}
-          />
-          <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top,rgba(5,5,5,0.9) 0%,rgba(5,5,5,0.5) 50%,rgba(5,5,5,0.3) 100%)" }} />
+        {/* Background blobs */}
+        <div style={{ position:"absolute", inset:0, overflow:"hidden", pointerEvents:"none", zIndex:1 }}>
+          {/* Parallax blue glow */}
+          <div style={{ position:"absolute", top:"30%", left:"40%", width:"600px", height:"600px", borderRadius:"50%", background:"radial-gradient(circle, rgba(0,113,255,0.13) 0%, transparent 70%)", transform:`translate(${parallax.x * 1.2}px, ${parallax.y * 1.2}px)`, transition:"transform 0.15s ease-out" }} />
+        </div>
+
+        {/* Figma: Large blurred glass card — hero-card.jpg (real team photo) blurred behind text */}
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:`translate(-50%,-50%) translate(${parallax.x * 0.2}px, ${parallax.y * 0.2}px)`, width:"min(1136px,90vw)", height:"385px", borderRadius:"33px", border:"3px solid rgba(255,255,255,0.12)", backdropFilter:"blur(3.15px)", WebkitBackdropFilter:"blur(3.15px)", boxShadow:"-44px -35px 100px 0px rgba(253,253,253,0.09)", overflow:"hidden", pointerEvents:"none", transition:"transform 0.2s ease-out", zIndex:2 }}>
+          <img src={`${import.meta.env.BASE_URL}images/hero-card.jpg`} alt=""
+            style={{ position:"absolute", inset:0, width:"100%", height:"100%", objectFit:"cover", objectPosition:"center 30%", opacity:0.55 }} />
+          <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top,rgba(5,5,5,0.88) 0%,rgba(5,5,5,0.45) 50%,rgba(5,5,5,0.25) 100%)" }} />
         </div>
 
         {/* Hero content */}
-        <div style={{ position:"relative", zIndex:2, maxWidth:"780px", margin:"0 auto", padding:"0 24px" }}>
+        <div style={{ position:"relative", zIndex:3, maxWidth:"780px", margin:"0 auto", padding:"0 24px" }}>
           {/* Label */}
           <div className="fade-word" style={{ animationDelay:"0s", fontFamily:"'Poppins',sans-serif", fontWeight:400, fontSize:"16px", background:"linear-gradient(266.8deg,#fafafa 2%,#949494 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", marginBottom:"24px", opacity:0 }}>
             Content &amp; Marketing Engine
