@@ -82,7 +82,7 @@ export function ChatWidget() {
       {/* Floating button */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="fixed bottom-6 end-6 z-50 w-14 h-14 rounded-full bg-foreground text-background flex items-center justify-center shadow-2xl hover:scale-105 transition-transform duration-200"
+        className="fixed bottom-6 start-6 z-50 w-14 h-14 rounded-full bg-foreground text-background flex items-center justify-center shadow-2xl hover:scale-105 transition-transform duration-200"
         aria-label="Open chat"
       >
         <AnimatePresence mode="wait" initial={false}>
@@ -106,7 +106,7 @@ export function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 end-6 z-50 w-80 sm:w-96 rounded-2xl border border-border bg-background shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-24 start-6 z-50 w-80 sm:w-96 rounded-2xl border border-border bg-background shadow-2xl flex flex-col overflow-hidden"
             style={{ maxHeight: "min(520px, 80vh)" }}
           >
             {/* Header */}
