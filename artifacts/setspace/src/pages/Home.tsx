@@ -9,7 +9,8 @@ const BLACK    = "#050505";
 const WHITE    = "#FAFAFA";
 const BLUE     = "#2D8AFF";
 const GRAY2    = "#888888";
-const CALENDLY = "https://calendly.com/ateebhasan-work/new-meeting";
+const CALENDLY = "https://booking.setspace.agency/widget/bookings/ateeb-hasan-personal-calendar-dal-sdzhc";
+const FRAMEWORK_URL = "https://blueprint.setspace.agency/";
 const MAX_W    = "1200px";
 
 /* ── HERO VIDEOS ── */
@@ -251,7 +252,7 @@ export default function Home() {
           {/* Buttons */}
           <div style={{ display:"flex", gap:"20px", justifyContent:"center", flexWrap:"wrap" }}>
             <BlueBtn href={CALENDLY}>Get Free Audit</BlueBtn>
-            <OutlineBtn href="#blueprint" onClick={e=>{ e.preventDefault(); document.querySelector("#blueprint")?.scrollIntoView({ behavior:"smooth" }); }}>
+            <OutlineBtn href={FRAMEWORK_URL}>
               Download Free Framework
             </OutlineBtn>
           </div>
@@ -752,18 +753,19 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════
-          BLUEPRINT DOWNLOAD
+          FRAMEWORK — links to GHL landing page
       ════════════════════════════════════ */}
       <section id="blueprint" style={{ padding:"120px 24px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth:MAX_W,margin:"0 auto" }}>
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"80px",alignItems:"center" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"72px",alignItems:"center" }}>
+
             <SlideIn from="left">
               <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",textTransform:"uppercase",letterSpacing:"3px",color:BLUE,marginBottom:"20px" }}>Free Resource</div>
               <GradH style={{ marginBottom:"16px" }}>The Scroll to Client Framework</GradH>
               <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"15px",color:GRAY2,lineHeight:1.8,marginBottom:"32px" }}>
                 Find out exactly why your content isn't converting — and what to do about it. Free for therapists, coaches, and wellness professionals.
               </p>
-              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px 24px",marginBottom:"36px" }}>
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:"12px 24px",marginBottom:"40px" }}>
                 {["The Scroll to Client Funnel","The Content Pattern Audit","The MOFU Gap explained","The Winning Content Formula","Production Quality Checklist","Your 30-Day Content System"].map((item,i) => (
                   <div key={i} style={{ display:"flex",alignItems:"flex-start",gap:"8px" }}>
                     <span style={{ color:BLUE,fontSize:"14px",flexShrink:0,marginTop:"2px" }}>→</span>
@@ -771,29 +773,32 @@ export default function Home() {
                   </div>
                 ))}
               </div>
-              <form onSubmit={handleBlueprint}>
-                <input type="email" value={blueprintEmail} onChange={e=>setBlueprintEmail(e.target.value)} placeholder="Your email address" required
-                  style={{ width:"100%",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"12px",color:WHITE,fontFamily:"'Poppins',sans-serif",fontSize:"15px",padding:"14px 18px",marginBottom:"12px",outline:"none" }} />
-                <button type="submit" disabled={blueprintStatus==="loading"||blueprintStatus==="success"}
-                  style={{ width:"100%",background:blueprintStatus==="success" ? "#1a7a1a" : "linear-gradient(180deg,#509dff 0%,#0071ff 100%)",color:WHITE,fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"15px",padding:"14px",border:"none",borderRadius:"12px",cursor:"pointer",transition:"opacity 0.2s" }}>
-                  {blueprintStatus==="loading" ? "Sending..." : blueprintStatus==="success" ? "Sent! Check your inbox." : "Send Me the Framework"}
-                </button>
-                <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",color:GRAY2,textAlign:"center",marginTop:"12px" }}>No spam. Unsubscribe anytime.</p>
-              </form>
+              <BlueBtn href={FRAMEWORK_URL} large>Get the Free Framework</BlueBtn>
+              <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",color:GRAY2,marginTop:"14px" }}>No spam. Instant access.</p>
             </SlideIn>
+
             <SlideIn from="right" delay={0.15}>
-              <div className="glass-card-blue" style={{ borderRadius:"24px",padding:"48px 40px",position:"relative",overflow:"hidden",border:"1px solid rgba(45,138,255,0.3)",boxShadow:"-11px -8px 30px 0px rgba(26,127,255,0.2)" }}>
-                <div style={{ position:"absolute",top:0,left:0,width:"4px",height:"100%",background:"linear-gradient(180deg,#509dff,#0071ff)" }} />
-                <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"10px",textTransform:"uppercase",letterSpacing:"3px",color:BLUE,marginBottom:"32px" }}>Free Framework</div>
-                <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"clamp(20px,2.5vw,28px)",color:WHITE,lineHeight:1.3,marginBottom:"12px" }}>THE SCROLL TO CLIENT FRAMEWORK</div>
-                <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"14px",color:BLUE,marginBottom:"48px" }}>By SetSpace</div>
-                {["Content Funnel","Pattern Audit","MOFU Gap","Content Formula"].map((item,i) => (
-                  <div key={i} style={{ display:"flex",alignItems:"center",gap:"12px",marginBottom:"14px" }}>
-                    <div style={{ width:"24px",height:"1px",background:BLUE }} />
-                    <span style={{ fontFamily:"'Poppins',sans-serif",fontSize:"13px",color:GRAY2 }}>{item}</span>
+              <a href={FRAMEWORK_URL} target="_blank" rel="noopener noreferrer" style={{ textDecoration:"none",display:"block" }}>
+                <motion.div whileHover={{ y:-6,boxShadow:"-11px -8px 50px 0px rgba(26,127,255,0.35)" }}
+                  transition={{ type:"spring",stiffness:280,damping:22 }}
+                  className="glass-card-blue"
+                  style={{ borderRadius:"24px",padding:"48px 40px",position:"relative",overflow:"hidden",border:"1px solid rgba(45,138,255,0.3)",boxShadow:"-11px -8px 30px 0px rgba(26,127,255,0.2)",cursor:"pointer" }}>
+                  <div style={{ position:"absolute",top:0,left:0,width:"4px",height:"100%",background:"linear-gradient(180deg,#509dff,#0071ff)" }} />
+                  <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"10px",textTransform:"uppercase",letterSpacing:"3px",color:BLUE,marginBottom:"28px" }}>Free Framework</div>
+                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"clamp(20px,2.5vw,28px)",color:WHITE,lineHeight:1.3,marginBottom:"10px" }}>THE SCROLL TO CLIENT FRAMEWORK</div>
+                  <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"14px",color:BLUE,marginBottom:"40px" }}>By SetSpace</div>
+                  {["Content Funnel","Pattern Audit","MOFU Gap","Content Formula"].map((item,i) => (
+                    <div key={i} style={{ display:"flex",alignItems:"center",gap:"12px",marginBottom:"14px" }}>
+                      <div style={{ width:"24px",height:"1px",background:BLUE }} />
+                      <span style={{ fontFamily:"'Poppins',sans-serif",fontSize:"13px",color:GRAY2 }}>{item}</span>
+                    </div>
+                  ))}
+                  <div style={{ marginTop:"32px",display:"flex",alignItems:"center",gap:"8px" }}>
+                    <span style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"14px",color:BLUE }}>Access the framework</span>
+                    <span style={{ color:BLUE,fontSize:"16px" }}>→</span>
                   </div>
-                ))}
-              </div>
+                </motion.div>
+              </a>
             </SlideIn>
           </div>
         </div>
