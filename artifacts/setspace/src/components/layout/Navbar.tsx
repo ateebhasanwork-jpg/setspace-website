@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
-const BLACK   = "#0A0A0A";
-const DARK    = "#1A1A1A";
-const WHITE   = "#FFFFFF";
-const ORANGE  = "#E84B1A";
-const DIVIDER = "#E8E8E8";
+const BLUE     = "#2D8AFF";
+const WHITE    = "#FFFFFF";
 const CALENDLY = "https://calendly.com/ateebhasan-work/new-meeting";
 
 export function Navbar() {
@@ -13,7 +10,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 60);
+    const handle = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handle);
     return () => window.removeEventListener("scroll", handle);
   }, []);
@@ -32,55 +29,86 @@ export function Navbar() {
           left: 0,
           right: 0,
           zIndex: 40,
-          background: BLACK,
-          borderBottom: scrolled ? `1px solid ${DARK}` : "1px solid transparent",
-          transition: "border-color 0.3s",
-          padding: "0 24px",
+          padding: "16px 24px",
+          transition: "padding 0.3s",
         }}
       >
         <div
+          className="nav-pill"
           style={{
-            maxWidth: "1140px",
+            maxWidth: "1200px",
             margin: "0 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            height: "72px",
+            height: "56px",
+            padding: "0 24px",
+            borderRadius: "32px",
+            transition: "background 0.3s",
           }}
         >
           {/* Logo */}
-          <a href="/" style={{ display: "flex", alignItems: "center", gap: "12px", textDecoration: "none" }}>
-            <div style={{ width: "32px", height: "32px", background: ORANGE, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "18px", color: BLACK, lineHeight: 1 }}>S</span>
-            </div>
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, fontSize: "16px", color: WHITE, letterSpacing: "3px" }}>
-              SETSPACE
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none", flexShrink: 0 }}>
+            <img
+              src="/images/logo.png"
+              alt="SetSpace"
+              style={{ width: "28px", height: "28px", objectFit: "contain", filter: "brightness(0) invert(1)" }}
+            />
+            <span style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: "16px", color: WHITE, letterSpacing: "0.5px" }}>
+              SetSpace
             </span>
           </a>
 
-          {/* Desktop CTA */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          {/* Center nav links — desktop */}
+          <nav className="hidden md:flex" style={{ display: "flex", alignItems: "center", gap: "32px" }}>
+            {[
+              { label: "Home", id: "#hero" },
+              { label: "About", id: "#team" },
+              { label: "Work", id: "#work" },
+              { label: "Contact", id: "#cta" },
+            ].map(link => (
+              <a
+                key={link.label}
+                href={link.id}
+                onClick={e => { e.preventDefault(); scrollTo(link.id); }}
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontWeight: 400,
+                  fontSize: "15px",
+                  color: "rgba(255,255,255,0.8)",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = WHITE)}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.8)")}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Right CTA */}
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <a
               href={CALENDLY}
               target="_blank"
               rel="noopener noreferrer"
               className="hidden md:inline-block"
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "'Poppins', sans-serif",
                 fontWeight: 600,
-                fontSize: "13px",
-                background: BLACK,
+                fontSize: "14px",
+                background: "linear-gradient(180deg, #509dff 0%, #2887ff 50%, #147cff 75%, #0a77ff 87.5%, #0071ff 100%)",
                 color: WHITE,
-                border: `2px solid ${ORANGE}`,
-                padding: "10px 22px",
+                padding: "10px 24px",
+                borderRadius: "26.5px",
                 textDecoration: "none",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-                transition: "background 0.3s, color 0.3s",
+                border: "1px solid #1b1b1b",
+                transition: "opacity 0.2s, transform 0.2s",
                 display: "inline-block",
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = ORANGE; e.currentTarget.style.color = BLACK; }}
-              onMouseLeave={e => { e.currentTarget.style.background = BLACK; e.currentTarget.style.color = WHITE; }}
+              onMouseEnter={e => { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "scale(1.02)"; }}
+              onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1)"; }}
             >
               Get Free Audit
             </a>
@@ -96,40 +124,39 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Mobile overlay */}
+      {/* Mobile menu */}
       {mobileOpen && (
         <div
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 35,
-            background: BLACK,
-            paddingTop: "80px",
-            paddingLeft: "24px",
-            paddingRight: "24px",
-            display: "flex",
-            flexDirection: "column",
+            background: "rgba(5,5,5,0.97)",
+            backdropFilter: "blur(20px)",
+            paddingTop: "100px",
+            paddingLeft: "32px",
+            paddingRight: "32px",
           }}
         >
           <nav style={{ display: "flex", flexDirection: "column", gap: "0" }}>
             {[
-              { label: "Services", id: "#services" },
+              { label: "Home", id: "#hero" },
+              { label: "About", id: "#team" },
               { label: "Work", id: "#work" },
-              { label: "Pricing", id: "#pricing" },
-              { label: "Team", id: "#team" },
+              { label: "Contact", id: "#cta" },
             ].map(link => (
               <a
                 key={link.label}
                 href={link.id}
                 onClick={e => { e.preventDefault(); scrollTo(link.id); }}
                 style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "32px",
+                  fontFamily: "'Poppins', sans-serif",
+                  fontWeight: 600,
+                  fontSize: "28px",
                   color: WHITE,
                   textDecoration: "none",
                   padding: "16px 0",
-                  borderBottom: `1px solid ${DARK}`,
+                  borderBottom: "1px solid rgba(255,255,255,0.08)",
                   display: "block",
                 }}
               >
@@ -144,17 +171,16 @@ export function Navbar() {
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "'Poppins', sans-serif",
                 fontWeight: 600,
-                fontSize: "15px",
-                background: ORANGE,
-                color: BLACK,
+                fontSize: "16px",
+                background: "linear-gradient(180deg, #509dff 0%, #0071ff 100%)",
+                color: WHITE,
                 padding: "16px 0",
+                borderRadius: "32px",
                 textDecoration: "none",
                 display: "block",
                 textAlign: "center",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
               }}
             >
               Get Free Audit
