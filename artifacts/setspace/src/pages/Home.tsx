@@ -264,7 +264,7 @@ export default function Home() {
       {/* ════════════════════════════════════
           HERO — Figma: text top-center, glass card BELOW buttons
       ════════════════════════════════════ */}
-      <section style={{ position:"relative", display:"flex", flexDirection:"column", alignItems:"center", overflow:"hidden", paddingBottom:0 }}>
+      <section id="hero" style={{ position:"relative", display:"flex", flexDirection:"column", alignItems:"center", overflow:"hidden", paddingBottom:0 }}>
 
         {/* Smoke texture — full bleed background */}
         <div style={{ position:"absolute", inset:0, pointerEvents:"none", zIndex:0 }}>
@@ -848,7 +848,7 @@ export default function Home() {
       {/* ════════════════════════════════════
           CTA — blue glow, "Ready to build your marketing engine?" (Figma)
       ════════════════════════════════════ */}
-      <section style={{ padding:"140px 24px",position:"relative",overflow:"hidden",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+      <section id="cta" style={{ padding:"140px 24px",position:"relative",overflow:"hidden",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ position:"absolute",inset:0,background:"radial-gradient(ellipse 80% 70% at 50% 100%,rgba(0,113,255,0.25) 0%,transparent 70%)",pointerEvents:"none" }} />
         <div style={{ position:"absolute",bottom:0,left:"50%",transform:"translateX(-50%)",width:"600px",height:"300px",background:"radial-gradient(ellipse at 50% 100%,rgba(0,113,255,0.4) 0%,transparent 70%)",pointerEvents:"none" }} />
 
