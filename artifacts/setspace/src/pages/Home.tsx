@@ -874,7 +874,7 @@ export default function Home() {
 
       {/* Sticky pulse phone button */}
       <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className="sticky-cta-btn" title="Book Free Audit"
-        style={{ position:"fixed",bottom:"32px",right:"32px",zIndex:30,width:"60px",height:"60px",borderRadius:"50%",background:"linear-gradient(180deg,#509dff 0%,#0071ff 100%)",color:WHITE,display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none",border:"1px solid rgba(114,176,255,0.4)",transition:"transform 0.3s" }}
+        style={{ position:"fixed",bottom:"32px",left:"32px",zIndex:30,width:"60px",height:"60px",borderRadius:"50%",background:"linear-gradient(180deg,#509dff 0%,#0071ff 100%)",color:WHITE,display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none",border:"1px solid rgba(114,176,255,0.4)",transition:"transform 0.3s" }}
         onMouseEnter={e=>(e.currentTarget.style.transform="scale(1.12)")}
         onMouseLeave={e=>(e.currentTarget.style.transform="scale(1)")}>
         <Phone style={{ width:"22px",height:"22px" }} />
