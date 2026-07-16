@@ -50,7 +50,7 @@ export function Navbar() {
           {/* Logo */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none", flexShrink: 0 }}>
             <img
-              src="/images/logo.png"
+              src={`${import.meta.env.BASE_URL}images/logo.png`}
               alt="SetSpace"
               style={{ width: "28px", height: "28px", objectFit: "contain", filter: "brightness(0) invert(1)" }}
             />
