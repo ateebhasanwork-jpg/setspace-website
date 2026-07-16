@@ -3,7 +3,7 @@ import { Menu, X } from "lucide-react";
 
 const BLUE     = "#2D8AFF";
 const WHITE    = "#FFFFFF";
-const CALENDLY = "https://calendly.com/ateebhasan-work/new-meeting";
+const CALENDLY = "https://booking.setspace.agency/widget/bookings/ateeb-hasan-personal-calendar-dal-sdzhc";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
