@@ -30,7 +30,7 @@ const BRANDS = [
 
 /* ── VIDEO TESTIMONIALS ── */
 const videoTestimonials: { name:string; role:string; videoId:string|null; isShort?:boolean }[] = [
-  { name:"Muhammad Helal", role:"Founder, Flagship Media", videoId:"uHydFKu0aCg", isShort:true },
+  { name:"Elena", role:"SetSpace Client", videoId:"uHydFKu0aCg", isShort:true },
 ];
 
 
@@ -658,7 +658,7 @@ export default function Home() {
                   <div style={{ position:"relative",aspectRatio: vt.isShort ? "9/16" : "16/9",background:"#080808" }}>
                     {vt.videoId ? (
                       <iframe
-                        src={`https://www.youtube.com/embed/${vt.videoId}?rel=0`}
+                        src={`https://www.youtube.com/embed/${vt.videoId}?rel=0&modestbranding=1&showinfo=0`}
                         title={`Testimonial — ${vt.name}`}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
