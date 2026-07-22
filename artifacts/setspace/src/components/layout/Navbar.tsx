@@ -50,9 +50,9 @@ export function Navbar() {
           {/* Logo */}
           <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none", flexShrink: 0 }}>
             <img
-              src={`${import.meta.env.BASE_URL}images/figma-logo.png`}
+              src={`${import.meta.env.BASE_URL}images/figma-logo-transparent.png`}
               alt="SetSpace"
-              style={{ width: "28px", height: "28px", objectFit: "contain", mixBlendMode: "screen" as const }}
+              style={{ width: "28px", height: "28px", objectFit: "contain" }}
             />
             <span style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: "16px", color: WHITE, letterSpacing: "0.5px" }}>
               SetSpace
