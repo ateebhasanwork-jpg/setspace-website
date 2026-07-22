@@ -28,26 +28,10 @@ const BRANDS = [
   { name: "Clutch",            img: "logo-clutch.png" },
 ];
 
-/* ── PORTFOLIO ── */
-const portfolioItems = [
-  { id:1,  title:"Wellness Brand Video",     client:"Wellness Coach",           category:"YouTube", videoId:"kvbTfcAIymU" },
-  { id:2,  title:"YouTube Long-Form Edit",   client:"Unexpected Atlanta Tours", category:"YouTube", videoId:"VysdDxP_oPo" },
-  { id:3,  title:"Testimonials Compilation", client:"Iron Master Awards",       category:"YouTube", videoId:"bWmb_8dzgTk" },
-  { id:4,  title:"Promotional Video",        client:"Kyle",                     category:"YouTube", videoId:"HBejF0eQ2TA" },
-  { id:5,  title:"Talking Head Reel",        client:"Dr. Lindsey",              category:"Reels",   videoId:"8iaVENpFw0I" },
-  { id:6,  title:"Podcast Short Clip",       client:"A Steady Space",           category:"Reels",   videoId:"W4Y0a2cz28E" },
-  { id:7,  title:"Gym Lifestyle Reel",       client:"Muhammad Helal",           category:"Reels",   videoId:"gkaBUIK-Y_U" },
-  { id:8,  title:"Informative Reel",         client:"Faceless Creator",         category:"Reels",   videoId:"oamKPmEShfo" },
-  { id:9,  title:"Brand Reel",               client:"Klinik Europe",            category:"Reels",   videoId:"sum7TRFh28k" },
-  { id:10, title:"Fitness Content Reel",     client:"Creator",                  category:"Reels",   videoId:"l5_OVdR_MWo" },
-  { id:11, title:"Explainer Ad",             client:"CyberCube",                category:"Ads",     videoId:"IZo8Txy26xg" },
-  { id:12, title:"UGC Ad",                   client:"Beast",                    category:"Ads",     videoId:"EPi8_QC6ULE" },
-  { id:13, title:"Meta Ad Creative",         client:"Flagship Media",           category:"Ads",     videoId:"4louAvpt_W0" },
-  { id:14, title:"AI Brand Video",           client:"SetSpace",                 category:"AI",      videoId:"kQJRCMOGjvA" },
-  { id:15, title:"AI Product Showcase",      client:"Tech Brand",               category:"AI",      videoId:"NWxk_O1Zf6Q" },
-  { id:16, title:"Motion Graphics",          client:"SBD Canada",               category:"AI",      videoId:"D7gJMWCYMqc" },
+/* ── VIDEO TESTIMONIALS ── */
+const videoTestimonials: { name:string; role:string; videoId:string|null }[] = [
+  { name:"Muhammad Helal", role:"Founder, Flagship Media", videoId:null },
 ];
-const CATS = ["All","YouTube","Reels","Ads","AI"];
 
 
 /* ════════════════════════════════════
@@ -228,25 +212,9 @@ const VDivider = () => (
    HOME PAGE
 ════════════════════════════════════ */
 export default function Home() {
-  const [activeTab,      setActiveTab]      = useState("All");
-  const [activeVideo,    setActiveVideo]    = useState<{videoId:string;title:string}|null>(null);
   const [openFaq,        setOpenFaq]        = useState<number|null>(0);
-  const [blueprintEmail, setBlueprintEmail] = useState("");
-  const [blueprintStatus,setBlueprintStatus]= useState<"idle"|"loading"|"success"|"error">("idle");
+  const [pricingBilling, setPricingBilling] = useState<'monthly'|'yearly'>('monthly');
   const parallax = useMouseParallax();
-
-  const filtered = activeTab === "All" ? portfolioItems : portfolioItems.filter(p => p.category === activeTab);
-
-  const handleBlueprint = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!blueprintEmail) return;
-    setBlueprintStatus("loading");
-    try {
-      const res = await fetch("/api/blueprint", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ email:blueprintEmail }) });
-      setBlueprintStatus(res.ok ? "success" : "error");
-      if (res.ok) setBlueprintEmail("");
-    } catch { setBlueprintStatus("error"); }
-  };
 
   return (
     <div style={{ background:BLACK, color:WHITE, fontFamily:"'Poppins',sans-serif", overflowX:"hidden" }}>
@@ -445,62 +413,59 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════
-          OUR WORK — 66px gradient heading + thumbnail grid
+          OUR APPROACH — strategy, funnels, frameworks
       ════════════════════════════════════ */}
-      <section id="work" style={{ padding:"120px 24px" }}>
+      <section id="work" style={{ padding:"120px 24px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth:MAX_W,margin:"0 auto" }}>
-          <FadeUp style={{ textAlign:"center",marginBottom:"56px" }}>
-            <GradH style={{ textAlign:"center",marginBottom:"0" }}>Our Work</GradH>
+
+          <FadeUp style={{ textAlign:"center",marginBottom:"72px" }}>
+            <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",textTransform:"uppercase",letterSpacing:"3px",color:BLUE,marginBottom:"16px" }}>How We Work</p>
+            <GradH style={{ textAlign:"center",marginBottom:"20px" }}>Our Approach</GradH>
+            <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"16px",color:GRAY2,maxWidth:"560px",margin:"0 auto",lineHeight:1.7 }}>
+              Every client gets a custom-built marketing engine — not a template, not a package, a real system built around your practice.
+            </p>
           </FadeUp>
 
-          {/* Filter tabs */}
-          <div style={{ display:"flex",justifyContent:"center",gap:"8px",marginBottom:"48px",flexWrap:"wrap" }}>
-            {CATS.map(cat => (
-              <motion.button key={cat} onClick={()=>setActiveTab(cat)}
-                whileHover={{ scale:1.04 }} whileTap={{ scale:0.97 }}
-                style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"13px",padding:"8px 22px",borderRadius:"24px",
-                  border: activeTab===cat ? `1px solid ${BLUE}` : "1px solid rgba(255,255,255,0.1)",
-                  background: activeTab===cat ? "rgba(45,138,255,0.15)" : "rgba(255,255,255,0.03)",
-                  color: activeTab===cat ? BLUE : GRAY2, cursor:"pointer",transition:"all 0.2s" }}>
-                {cat}
-              </motion.button>
+          {/* 3-step process cards */}
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"16px",marginBottom:"48px" }}>
+            {[
+              { num:"01", icon:"🔍", title:"Discovery & Strategy",     desc:"We audit your digital presence, map your ideal client journey, and build a 90-day content roadmap specific to your niche and goals." },
+              { num:"02", icon:"🗺️", title:"Funnel Architecture",       desc:"We design the full scroll-to-session funnel — from awareness reels and trust-building posts to conversion landing pages and email sequences." },
+              { num:"03", icon:"🚀", title:"Execution & Optimization",  desc:"We produce all content, manage publishing, and run monthly strategy reviews so your marketing keeps improving as you grow." },
+            ].map((s,i) => (
+              <FadeUp key={i} delay={i*0.12}>
+                <motion.div whileHover={{ y:-8 }} transition={{ type:"spring",stiffness:280,damping:22 }}
+                  className="glass-card" style={{ borderRadius:"24px",padding:"40px 36px",height:"100%",display:"flex",flexDirection:"column",gap:"20px" }}>
+                  <div style={{ display:"flex",alignItems:"center",justifyContent:"space-between" }}>
+                    <span style={{ fontSize:"32px" }}>{s.icon}</span>
+                    <span style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"11px",textTransform:"uppercase",letterSpacing:"2px",color:BLUE }}>{s.num}</span>
+                  </div>
+                  <h3 style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"22px",color:WHITE,margin:0,letterSpacing:"-0.4px",lineHeight:1.3 }}>{s.title}</h3>
+                  <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"15px",color:GRAY2,lineHeight:1.7,margin:0 }}>{s.desc}</p>
+                </motion.div>
+              </FadeUp>
             ))}
           </div>
 
-          {/* Thumbnail grid — 4 columns, VideoThumb handles fallback */}
-          <AnimatePresence mode="popLayout">
-            <motion.div key={activeTab} initial={{ opacity:0,y:16 }} animate={{ opacity:1,y:0 }} exit={{ opacity:0,y:-8 }} transition={{ duration:0.35 }}
-              style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:"12px" }}>
-              {filtered.map((item,i) => (
-                <motion.div key={item.id} initial={{ opacity:0,scale:0.95 }} animate={{ opacity:1,scale:1 }} transition={{ delay:i*0.04,duration:0.4 }}>
-                  <VideoThumb
-                    item={item}
-                    onClick={() => setActiveVideo({ videoId:item.videoId, title:item.title })}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+          {/* What we deliver — deliverables grid */}
+          <FadeUp>
+            <div className="glass-card" style={{ borderRadius:"24px",padding:"48px",border:"1px solid rgba(45,138,255,0.2)",background:"linear-gradient(135deg,rgba(45,138,255,0.04),rgba(0,0,0,0))" }}>
+              <p style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"12px",textTransform:"uppercase",letterSpacing:"3px",color:BLUE,marginBottom:"20px" }}>What You Receive</p>
+              <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"12px 32px" }}>
+                {[
+                  "Content Funnel Map","Custom Brand Voice Guide","90-Day Content Roadmap",
+                  "Landing Page & Lead Capture","Email Nurture Sequence","Monthly Performance Report",
+                ].map((item,i) => (
+                  <div key={i} style={{ display:"flex",alignItems:"center",gap:"10px",padding:"12px 0",borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
+                    <span style={{ color:BLUE,fontSize:"14px",flexShrink:0 }}>→</span>
+                    <span style={{ fontFamily:"'Poppins',sans-serif",fontSize:"14px",color:"#d0d0d0" }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </FadeUp>
         </div>
       </section>
-
-      {/* VIDEO MODAL */}
-      <AnimatePresence>
-        {activeVideo && (
-          <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }} onClick={()=>setActiveVideo(null)}
-            style={{ position:"fixed",inset:0,zIndex:50,background:"rgba(0,0,0,0.96)",display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
-            <motion.div initial={{ scale:0.94 }} animate={{ scale:1 }} exit={{ scale:0.94 }} onClick={e=>e.stopPropagation()} style={{ width:"100%",maxWidth:"880px" }}>
-              <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"14px" }}>
-                <span style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"16px",color:WHITE }}>{activeVideo.title}</span>
-                <button onClick={()=>setActiveVideo(null)} style={{ fontFamily:"'Poppins',sans-serif",fontSize:"28px",color:GRAY2,background:"none",border:"none",cursor:"pointer",lineHeight:1 }}>×</button>
-              </div>
-              <div style={{ position:"relative",aspectRatio:"16/9" }}>
-                <iframe src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=1&rel=0`} title={activeVideo.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen style={{ position:"absolute",inset:0,width:"100%",height:"100%",border:"none",borderRadius:"12px" }} />
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ════════════════════════════════════
           PRICING — 66px heading, featured center card (Figma)
@@ -518,21 +483,44 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          {/* Pricing plan selector (Figma: pill selector above) */}
-          <div style={{ display:"flex",justifyContent:"center",marginBottom:"48px" }}>
+          {/* Pricing plan selector */}
+          <div style={{ display:"flex",justifyContent:"center",marginBottom:"12px" }}>
             <div style={{ background:"linear-gradient(to bottom,#171717,#090909)",border:"2px solid #98c6ff",borderRadius:"36px",padding:"12px",display:"flex",gap:"8px" }}>
-              <button style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"15px",background:"linear-gradient(to bottom,#0071ff,#0c78ff)",color:WHITE,border:"none",padding:"12px 36px",borderRadius:"28px",cursor:"pointer",boxShadow:"0px 4px 30px 0px rgba(0,83,216,0.79)" }}>Monthly</button>
-              <button style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"15px",background:"none",color:"rgba(255,255,255,0.5)",border:"none",padding:"12px 36px",borderRadius:"28px",cursor:"pointer" }}>Yearly</button>
+              <button onClick={()=>setPricingBilling('monthly')}
+                style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"15px",
+                  background: pricingBilling==='monthly' ? "linear-gradient(to bottom,#0071ff,#0c78ff)" : "none",
+                  color: pricingBilling==='monthly' ? WHITE : "rgba(255,255,255,0.5)",
+                  border:"none",padding:"12px 36px",borderRadius:"28px",cursor:"pointer",
+                  boxShadow: pricingBilling==='monthly' ? "0px 4px 30px 0px rgba(0,83,216,0.79)" : "none",
+                  transition:"all 0.25s" }}>Monthly</button>
+              <button onClick={()=>setPricingBilling('yearly')}
+                style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"15px",
+                  background: pricingBilling==='yearly' ? "linear-gradient(to bottom,#0071ff,#0c78ff)" : "none",
+                  color: pricingBilling==='yearly' ? WHITE : "rgba(255,255,255,0.5)",
+                  border:"none",padding:"12px 36px",borderRadius:"28px",cursor:"pointer",
+                  boxShadow: pricingBilling==='yearly' ? "0px 4px 30px 0px rgba(0,83,216,0.79)" : "none",
+                  transition:"all 0.25s" }}>Yearly</button>
             </div>
           </div>
 
-          {/* 3 cards — center is featured (Figma: white border, white inner card with blue shadow) */}
+          {/* Yearly savings label */}
+          <div style={{ textAlign:"center",marginBottom:"40px",minHeight:"28px" }}>
+            {pricingBilling==='yearly' && (
+              <span style={{ fontFamily:"'Poppins',sans-serif",fontSize:"13px",color:BLUE,background:"rgba(45,138,255,0.1)",border:"1px solid rgba(45,138,255,0.25)",borderRadius:"20px",padding:"4px 16px" }}>
+                🎉 2 months free — save up to $6,000/yr
+              </span>
+            )}
+          </div>
+
+          {/* 3 cards — center is featured */}
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1.1fr 1fr",gap:"16px",alignItems:"start" }}>
             {[
-              { name:"Starter", price:"$800",   period:"/mo", desc:"For wellness professionals getting started with consistent content.", features:["8 reels / month","Content strategy","Basic social media management"], featured:false },
-              { name:"Growth",  price:"$1,500", period:"/mo", desc:"For growing practices ready to expand content and capture leads.",    features:["12 reels + 6 designs/month","Content strategy","Landing page (one-time setup)","Email nurture sequence (3 emails)"], featured:true  },
-              { name:"Full Engine",price:"$2,500",period:"/mo",desc:"A complete done-for-you content and marketing operation.",           features:["Full content production","Strategy + landing page","Full email nurture sequence","Monthly performance review"], featured:false },
-            ].map((plan,i) => (
+              { name:"Starter",    monthly:"$800",  yearly:"$640",  period:"/mo", desc:"For wellness professionals getting started with consistent content.", features:["8 reels / month","Content strategy","Basic social media management"], featured:false },
+              { name:"Growth",     monthly:"$1,500",yearly:"$1,200",period:"/mo", desc:"For growing practices ready to expand content and capture leads.",    features:["12 reels + 6 designs/month","Content strategy","Landing page (one-time setup)","Email nurture sequence (3 emails)"], featured:true  },
+              { name:"Full Engine",monthly:"$2,500",yearly:"$2,000",period:"/mo", desc:"A complete done-for-you content and marketing operation.",           features:["Full content production","Strategy + landing page","Full email nurture sequence","Monthly performance review"], featured:false },
+            ].map((plan,i) => {
+              const price = pricingBilling==='yearly' ? plan.yearly : plan.monthly;
+              return (
               <FadeUp key={i} delay={i*0.1}>
                 {plan.featured ? (
                   /* Featured center card — Figma: white border, rounded-[51px], blue shadow */
@@ -542,7 +530,8 @@ export default function Home() {
                       <div style={{ display:"flex",alignItems:"baseline",gap:"4px",marginBottom:"8px" }}>
                         <span style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"47px",color:WHITE,lineHeight:1,letterSpacing:"-0.94px" }}>{plan.name}</span>
                       </div>
-                      <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"46px",color:WHITE,letterSpacing:"-0.92px",marginBottom:"32px" }}>{plan.price}{plan.period}</div>
+                      <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:500,fontSize:"46px",color:WHITE,letterSpacing:"-0.92px",marginBottom:"4px" }}>{price}{plan.period}</div>
+                      {pricingBilling==='yearly' && <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",color:BLUE,marginBottom:"28px" }}>billed annually — save 20%</p>}
                       <ul style={{ listStyle:"none",padding:0,margin:"0 0 36px" }}>
                         {plan.features.map((f,fi) => (
                           <li key={fi} style={{ display:"flex",alignItems:"flex-start",gap:"10px",marginBottom:"20px" }}>
@@ -558,10 +547,11 @@ export default function Home() {
                   <motion.div whileHover={{ y:-6 }} transition={{ type:"spring",stiffness:280,damping:22 }}
                     className="glass-card" style={{ borderRadius:"24px",padding:"40px 32px",position:"relative",display:"flex",flexDirection:"column" }}>
                     <p style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"12px",textTransform:"uppercase",letterSpacing:"2px",color:BLUE,marginBottom:"16px" }}>{plan.name}</p>
-                    <div style={{ display:"flex",alignItems:"baseline",gap:"4px",marginBottom:"12px" }}>
-                      <span style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"40px",color:WHITE,lineHeight:1 }}>{plan.price}</span>
+                    <div style={{ display:"flex",alignItems:"baseline",gap:"4px",marginBottom:"4px" }}>
+                      <span style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"40px",color:WHITE,lineHeight:1 }}>{price}</span>
                       <span style={{ fontFamily:"'Poppins',sans-serif",fontSize:"14px",color:GRAY2 }}>{plan.period}</span>
                     </div>
+                    {pricingBilling==='yearly' && <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"11px",color:BLUE,margin:"0 0 16px" }}>billed annually — save 20%</p>}
                     <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"14px",color:GRAY2,lineHeight:1.6,margin:"0 0 24px",flex:0 }}>{plan.desc}</p>
                     <ul style={{ listStyle:"none",padding:0,margin:"0 0 32px",flex:1 }}>
                       {plan.features.map((f,fi) => (
@@ -580,7 +570,7 @@ export default function Home() {
                   </motion.div>
                 )}
               </FadeUp>
-            ))}
+            ); })}
           </div>
         </div>
       </section>
@@ -651,7 +641,51 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════════════════
-          ABOUT — left: text+stats  |  right: founder photo
+          VIDEO TESTIMONIALS
+      ════════════════════════════════════ */}
+      <section style={{ padding:"120px 24px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ maxWidth:MAX_W,margin:"0 auto" }}>
+          <FadeUp style={{ textAlign:"center",marginBottom:"56px" }}>
+            <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",textTransform:"uppercase",letterSpacing:"3px",color:BLUE,marginBottom:"16px" }}>Client Stories</p>
+            <GradH style={{ textAlign:"center",marginBottom:"16px" }}>What Our Clients Say</GradH>
+            <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"16px",color:GRAY2,maxWidth:"480px",margin:"0 auto" }}>Real results from real practices.</p>
+          </FadeUp>
+
+          <div style={{ display:"grid",gridTemplateColumns:`repeat(${videoTestimonials.length > 2 ? 3 : videoTestimonials.length},1fr)`,gap:"20px",maxWidth: videoTestimonials.length === 1 ? "640px" : "100%",margin:"0 auto" }}>
+            {videoTestimonials.map((vt,i) => (
+              <FadeUp key={i} delay={i*0.1}>
+                <div className="glass-card" style={{ borderRadius:"20px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ position:"relative",aspectRatio:"16/9",background:"#080808" }}>
+                    {vt.videoId ? (
+                      <iframe
+                        src={`https://www.youtube.com/embed/${vt.videoId}?rel=0`}
+                        title={`Testimonial — ${vt.name}`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        style={{ position:"absolute",inset:0,width:"100%",height:"100%",border:"none" }}
+                      />
+                    ) : (
+                      <div style={{ position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"12px" }}>
+                        <div style={{ width:"64px",height:"64px",borderRadius:"50%",background:"rgba(45,138,255,0.12)",border:"1px solid rgba(45,138,255,0.35)",display:"flex",alignItems:"center",justifyContent:"center" }}>
+                          <span style={{ fontSize:"22px",marginLeft:"4px",color:BLUE }}>▶</span>
+                        </div>
+                        <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"13px",color:GRAY2,margin:0 }}>Video testimonial coming soon</p>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ padding:"20px 24px 24px" }}>
+                    <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"15px",color:WHITE }}>{vt.name}</div>
+                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",color:BLUE,marginTop:"3px" }}>{vt.role}</div>
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════
+          ABOUT — left: text+stats  |  right: team collage
       ════════════════════════════════════ */}
       <section id="team" style={{ padding:"120px 24px",borderTop:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ maxWidth:MAX_W,margin:"0 auto" }}>
@@ -686,16 +720,40 @@ export default function Home() {
               </div>
             </SlideIn>
 
-            {/* Founder photo */}
+            {/* Team collage */}
             <SlideIn from="right" delay={0.1}>
-              <div style={{ position:"relative",borderRadius:"24px",overflow:"hidden",border:`2px solid ${BLUE}`,boxShadow:"-11px -8px 30px 0px rgba(26,127,255,0.2)",aspectRatio:"3/4" }}>
-                <img src={`${import.meta.env.BASE_URL}images/ateeb.jpg`} alt="Ateeb Hasan — Founder"
-                  className="kb-founder"
-                  style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block",willChange:"transform" }} />
-                <div style={{ position:"absolute",inset:0,background:"linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 50%)" }} />
-                <div style={{ position:"absolute",bottom:"24px",left:"24px" }}>
-                  <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:700,fontSize:"17px",color:WHITE }}>Ateeb Hasan</div>
-                  <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"13px",color:BLUE,marginTop:"3px" }}>Founder &amp; Creative Lead</div>
+              <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gridAutoRows:"clamp(90px,11vw,140px)",gap:"8px" }}>
+                {/* Ateeb — tall left (spans 2 rows) */}
+                <div style={{ gridColumn:"1",gridRow:"1 / span 2",borderRadius:"16px",overflow:"hidden",border:`1px solid ${BLUE}`,position:"relative" }}>
+                  <img src={`${import.meta.env.BASE_URL}images/ateeb.jpg`} alt="Ateeb Hasan" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
+                  <div style={{ position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(to top,rgba(0,0,0,0.8),transparent)",padding:"10px 10px 8px" }}>
+                    <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"11px",color:WHITE }}>Ateeb</div>
+                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"10px",color:BLUE }}>Founder</div>
+                  </div>
+                </div>
+                {/* Zoha — col 2, row 1 */}
+                <div style={{ gridColumn:"2",gridRow:"1",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <img src={`${import.meta.env.BASE_URL}images/zoha.jpeg`} alt="Zoha" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
+                </div>
+                {/* Jaffer — col 3, row 1 */}
+                <div style={{ gridColumn:"3",gridRow:"1",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <img src={`${import.meta.env.BASE_URL}images/jaffer.jpeg`} alt="Jaffer" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
+                </div>
+                {/* Sani — col 2, row 2 */}
+                <div style={{ gridColumn:"2",gridRow:"2",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <img src={`${import.meta.env.BASE_URL}images/sani.jpeg`} alt="Sani" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
+                </div>
+                {/* Ashhad — col 3, row 2 */}
+                <div style={{ gridColumn:"3",gridRow:"2",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <img src={`${import.meta.env.BASE_URL}images/ashad.jpeg`} alt="Ashhad" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
+                </div>
+                {/* Laiba — col 1, row 3 */}
+                <div style={{ gridColumn:"1",gridRow:"3",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <img src={`${import.meta.env.BASE_URL}images/laiba.jpeg`} alt="Laiba" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
+                </div>
+                {/* Zayd — col 2-3, row 3 */}
+                <div style={{ gridColumn:"2 / span 2",gridRow:"3",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <img src={`${import.meta.env.BASE_URL}images/zayd.jpeg`} alt="Zayd" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
                 </div>
               </div>
             </SlideIn>
