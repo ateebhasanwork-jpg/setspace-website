@@ -29,8 +29,8 @@ const BRANDS = [
 ];
 
 /* ── VIDEO TESTIMONIALS ── */
-const videoTestimonials: { name:string; role:string; videoId:string|null }[] = [
-  { name:"Muhammad Helal", role:"Founder, Flagship Media", videoId:null },
+const videoTestimonials: { name:string; role:string; videoId:string|null; isShort?:boolean }[] = [
+  { name:"Muhammad Helal", role:"Founder, Flagship Media", videoId:"uHydFKu0aCg", isShort:true },
 ];
 
 
@@ -651,16 +651,16 @@ export default function Home() {
             <p style={{ fontFamily:"'Poppins',sans-serif",fontSize:"16px",color:GRAY2,maxWidth:"480px",margin:"0 auto" }}>Real results from real practices.</p>
           </FadeUp>
 
-          <div style={{ display:"grid",gridTemplateColumns:`repeat(${videoTestimonials.length > 2 ? 3 : videoTestimonials.length},1fr)`,gap:"20px",maxWidth: videoTestimonials.length === 1 ? "640px" : "100%",margin:"0 auto" }}>
+          <div style={{ display:"flex",flexWrap:"wrap",justifyContent:"center",gap:"24px" }}>
             {videoTestimonials.map((vt,i) => (
               <FadeUp key={i} delay={i*0.1}>
-                <div className="glass-card" style={{ borderRadius:"20px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
-                  <div style={{ position:"relative",aspectRatio:"16/9",background:"#080808" }}>
+                <div className="glass-card" style={{ borderRadius:"20px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)",width: vt.isShort ? "320px" : "560px",flexShrink:0 }}>
+                  <div style={{ position:"relative",aspectRatio: vt.isShort ? "9/16" : "16/9",background:"#080808" }}>
                     {vt.videoId ? (
                       <iframe
                         src={`https://www.youtube.com/embed/${vt.videoId}?rel=0`}
                         title={`Testimonial — ${vt.name}`}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
                         style={{ position:"absolute",inset:0,width:"100%",height:"100%",border:"none" }}
                       />
@@ -673,7 +673,7 @@ export default function Home() {
                       </div>
                     )}
                   </div>
-                  <div style={{ padding:"20px 24px 24px" }}>
+                  <div style={{ padding:"16px 20px 20px" }}>
                     <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"15px",color:WHITE }}>{vt.name}</div>
                     <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"12px",color:BLUE,marginTop:"3px" }}>{vt.role}</div>
                   </div>
@@ -720,37 +720,24 @@ export default function Home() {
               </div>
             </SlideIn>
 
-            {/* Team collage */}
+            {/* Team collage — 4×2 grid, all 8 members */}
             <SlideIn from="right" delay={0.1}>
-              <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gridAutoRows:"clamp(90px,11vw,140px)",gap:"8px" }}>
-                {/* Ateeb — tall left (spans 2 rows) */}
-                <div style={{ gridColumn:"1",gridRow:"1 / span 2",borderRadius:"16px",overflow:"hidden",border:`1px solid ${BLUE}`,position:"relative" }}>
-                  <img src={`${import.meta.env.BASE_URL}images/ateeb.jpg`} alt="Ateeb Hasan" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                </div>
-                {/* Zoha — col 2, row 1 */}
-                <div style={{ gridColumn:"2",gridRow:"1",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
-                  <img src={`${import.meta.env.BASE_URL}images/zoha.jpeg`} alt="Zoha" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                </div>
-                {/* Jaffer — col 3, row 1 */}
-                <div style={{ gridColumn:"3",gridRow:"1",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
-                  <img src={`${import.meta.env.BASE_URL}images/jaffer.jpeg`} alt="Jaffer" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                </div>
-                {/* Sani — col 2, row 2 */}
-                <div style={{ gridColumn:"2",gridRow:"2",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
-                  <img src={`${import.meta.env.BASE_URL}images/sani.jpeg`} alt="Sani" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                </div>
-                {/* Ashhad — col 3, row 2 */}
-                <div style={{ gridColumn:"3",gridRow:"2",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
-                  <img src={`${import.meta.env.BASE_URL}images/ashad.jpeg`} alt="Ashhad" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                </div>
-                {/* Laiba — col 1, row 3 */}
-                <div style={{ gridColumn:"1",gridRow:"3",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
-                  <img src={`${import.meta.env.BASE_URL}images/laiba.jpeg`} alt="Laiba" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                </div>
-                {/* Zayd — col 2-3, row 3 */}
-                <div style={{ gridColumn:"2 / span 2",gridRow:"3",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
-                  <img src={`${import.meta.env.BASE_URL}images/zayd.jpeg`} alt="Zayd" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                </div>
+              <div style={{ display:"grid",gridTemplateColumns:"repeat(4,1fr)",gridAutoRows:"clamp(110px,12vw,155px)",gap:"8px" }}>
+                {[
+                  { src:"team-ateeb.jpg",    alt:"Ateeb",    pos:"center 20%" },
+                  { src:"team-zoha.jpg",     alt:"Zoha",     pos:"center 15%" },
+                  { src:"team-sani.jpg",     alt:"Sani",     pos:"center 10%" },
+                  { src:"team-laiba.jpg",    alt:"Laiba",    pos:"center 15%" },
+                  { src:"team-jaffer.jpg",   alt:"Jaffer",   pos:"center 15%" },
+                  { src:"team-abdullah.jpg", alt:"Abdullah", pos:"center 15%" },
+                  { src:"team-ashad.jpg",    alt:"Ashad",    pos:"center 15%" },
+                  { src:"team-zayd.jpg",     alt:"Zayd",     pos:"center 15%" },
+                ].map((m,i) => (
+                  <div key={i} style={{ borderRadius:"14px",overflow:"hidden",border: i===0 ? `1px solid ${BLUE}` : "1px solid rgba(255,255,255,0.08)" }}>
+                    <img src={`${import.meta.env.BASE_URL}images/${m.src}`} alt={m.alt}
+                      style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:m.pos,display:"block" }} />
+                  </div>
+                ))}
               </div>
             </SlideIn>
           </div>
