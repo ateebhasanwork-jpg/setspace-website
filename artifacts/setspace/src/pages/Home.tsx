@@ -726,10 +726,6 @@ export default function Home() {
                 {/* Ateeb — tall left (spans 2 rows) */}
                 <div style={{ gridColumn:"1",gridRow:"1 / span 2",borderRadius:"16px",overflow:"hidden",border:`1px solid ${BLUE}`,position:"relative" }}>
                   <img src={`${import.meta.env.BASE_URL}images/ateeb.jpg`} alt="Ateeb Hasan" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top",display:"block" }} />
-                  <div style={{ position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(to top,rgba(0,0,0,0.8),transparent)",padding:"10px 10px 8px" }}>
-                    <div style={{ fontFamily:"'Poppins',sans-serif",fontWeight:600,fontSize:"11px",color:WHITE }}>Ateeb</div>
-                    <div style={{ fontFamily:"'Poppins',sans-serif",fontSize:"10px",color:BLUE }}>Founder</div>
-                  </div>
                 </div>
                 {/* Zoha — col 2, row 1 */}
                 <div style={{ gridColumn:"2",gridRow:"1",borderRadius:"16px",overflow:"hidden",border:"1px solid rgba(255,255,255,0.08)" }}>
