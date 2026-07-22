@@ -52,7 +52,7 @@ export function Navbar() {
             <img
               src={`${import.meta.env.BASE_URL}images/figma-logo.png`}
               alt="SetSpace"
-              style={{ width: "28px", height: "28px", objectFit: "contain" }}
+              style={{ width: "28px", height: "28px", objectFit: "contain", mixBlendMode: "screen" as const }}
             />
             <span style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600, fontSize: "16px", color: WHITE, letterSpacing: "0.5px" }}>
               SetSpace
